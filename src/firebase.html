@@ -1,0 +1,83 @@
+<!-- Connexion Google + base Firestore partagée (site web uniquement) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<style>
+.login{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;padding-block:24px;padding-inline:16px}
+.login-box{width:min(420px,100%);background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:28px;display:flex;flex-direction:column;gap:16px;box-shadow:var(--shadow)}
+.login-box p{margin:0;color:var(--ink-2)}
+.login-err{background:var(--ko-soft);color:var(--ko);border-radius:8px;padding:10px 12px;font-size:14px;font-weight:600}
+.acct{display:flex;flex-direction:column;gap:6px;padding-inline:8px;font-size:12px;color:var(--ink-3);min-width:0}
+.acct span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:860px){.acct{flex-direction:row;align-items:center;padding-inline:0}.acct span{display:none}}
+</style>
+<div class="login" id="login" hidden>
+  <div class="login-box">
+    <div class="brand-mark">Faruk<span>·</span>Auto</div>
+    <p>Connectez-vous avec votre compte Google pour accéder aux voitures, marges et bilan partagés entre associés.</p>
+    <div class="login-err" id="login-err" hidden></div>
+    <button class="btn primary" id="login-go" type="button">Se connecter avec Google</button>
+    <button class="btn ghost" id="login-out" type="button" hidden>Changer de compte</button>
+  </div>
+</div>
+<script>
+(function () {
+  const cfg = window.FIREBASE_CONFIG || {};
+  const configured = !!(window.firebase && cfg.apiKey && !/^COLLER/.test(cfg.apiKey));
+  let auth = null, started = false;
+  const $id = id => document.getElementById(id);
+
+  function show(msg, denied) {
+    $id('login').hidden = false;
+    $id('login-err').hidden = !msg; $id('login-err').textContent = msg || '';
+    $id('login-go').hidden = !!denied; $id('login-out').hidden = !denied;
+  }
+  function errMsg(e) {
+    if (e.code === 'auth/unauthorized-domain') return 'Domaine non autorisé : ajoutez « ' + location.hostname + ' » dans Firebase > Authentication > Paramètres > Domaines autorisés.';
+    if (e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request') return '';
+    return 'Connexion impossible (' + e.code + '). Réessayez.';
+  }
+  function account(u) {
+    if (document.querySelector('.acct')) return;
+    const el = document.createElement('div');
+    el.className = 'acct';
+    el.innerHTML = '<span></span><button class="btn ghost sm" type="button">Se déconnecter</button>';
+    el.querySelector('span').textContent = u.email;
+    el.querySelector('button').onclick = () => auth.signOut();
+    document.querySelector('.side').appendChild(el);
+  }
+
+  window.faBackend = {
+    configured,
+    start() {
+      return new Promise(resolve => {
+        firebase.initializeApp(cfg);
+        auth = firebase.auth();
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({prompt: 'select_account'});
+        auth.getRedirectResult().catch(e => show(errMsg(e)));
+        $id('login-go').onclick = () => auth.signInWithPopup(provider).catch(e => {
+          if (e.code === 'auth/popup-blocked' || e.code === 'auth/operation-not-supported-in-environment') auth.signInWithRedirect(provider);
+          else show(errMsg(e));
+        });
+        $id('login-out').onclick = () => auth.signOut();
+        auth.onAuthStateChanged(u => {
+          if (u) {
+            $id('login').hidden = true; account(u);
+            if (!started) { started = true; resolve(firebase.firestore()); }
+          } else if (started) {
+            location.reload();
+          } else {
+            show();
+          }
+        });
+      });
+    },
+    denied() {
+      const u = auth && auth.currentUser;
+      show('Le compte ' + (u ? u.email : '') + ' n\'a pas accès. Un associé doit l\'ajouter dans les règles Firebase.', true);
+    },
+  };
+})();
+</script>

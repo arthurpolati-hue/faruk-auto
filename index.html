@@ -7,6 +7,90 @@
 <style>html,body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
+<!-- Connexion Google + base Firestore partagée (site web uniquement) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<style>
+.login{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;padding-block:24px;padding-inline:16px}
+.login-box{width:min(420px,100%);background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:28px;display:flex;flex-direction:column;gap:16px;box-shadow:var(--shadow)}
+.login-box p{margin:0;color:var(--ink-2)}
+.login-err{background:var(--ko-soft);color:var(--ko);border-radius:8px;padding:10px 12px;font-size:14px;font-weight:600}
+.acct{display:flex;flex-direction:column;gap:6px;padding-inline:8px;font-size:12px;color:var(--ink-3);min-width:0}
+.acct span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:860px){.acct{flex-direction:row;align-items:center;padding-inline:0}.acct span{display:none}}
+</style>
+<div class="login" id="login" hidden>
+  <div class="login-box">
+    <div class="brand-mark">Faruk<span>·</span>Auto</div>
+    <p>Connectez-vous avec votre compte Google pour accéder aux voitures, marges et bilan partagés entre associés.</p>
+    <div class="login-err" id="login-err" hidden></div>
+    <button class="btn primary" id="login-go" type="button">Se connecter avec Google</button>
+    <button class="btn ghost" id="login-out" type="button" hidden>Changer de compte</button>
+  </div>
+</div>
+<script>
+(function () {
+  const cfg = window.FIREBASE_CONFIG || {};
+  const configured = !!(window.firebase && cfg.apiKey && !/^COLLER/.test(cfg.apiKey));
+  let auth = null, started = false;
+  const $id = id => document.getElementById(id);
+
+  function show(msg, denied) {
+    $id('login').hidden = false;
+    $id('login-err').hidden = !msg; $id('login-err').textContent = msg || '';
+    $id('login-go').hidden = !!denied; $id('login-out').hidden = !denied;
+  }
+  function errMsg(e) {
+    if (e.code === 'auth/unauthorized-domain') return 'Domaine non autorisé : ajoutez « ' + location.hostname + ' » dans Firebase > Authentication > Paramètres > Domaines autorisés.';
+    if (e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request') return '';
+    return 'Connexion impossible (' + e.code + '). Réessayez.';
+  }
+  function account(u) {
+    if (document.querySelector('.acct')) return;
+    const el = document.createElement('div');
+    el.className = 'acct';
+    el.innerHTML = '<span></span><button class="btn ghost sm" type="button">Se déconnecter</button>';
+    el.querySelector('span').textContent = u.email;
+    el.querySelector('button').onclick = () => auth.signOut();
+    document.querySelector('.side').appendChild(el);
+  }
+
+  window.faBackend = {
+    configured,
+    start() {
+      return new Promise(resolve => {
+        firebase.initializeApp(cfg);
+        auth = firebase.auth();
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({prompt: 'select_account'});
+        auth.getRedirectResult().catch(e => show(errMsg(e)));
+        $id('login-go').onclick = () => auth.signInWithPopup(provider).catch(e => {
+          if (e.code === 'auth/popup-blocked' || e.code === 'auth/operation-not-supported-in-environment') auth.signInWithRedirect(provider);
+          else show(errMsg(e));
+        });
+        $id('login-out').onclick = () => auth.signOut();
+        auth.onAuthStateChanged(u => {
+          if (u) {
+            $id('login').hidden = true; account(u);
+            if (!started) { started = true; resolve(firebase.firestore()); }
+          } else if (started) {
+            location.reload();
+          } else {
+            show();
+          }
+        });
+      });
+    },
+    denied() {
+      const u = auth && auth.currentUser;
+      show('Le compte ' + (u ? u.email : '') + ' n\'a pas accès. Un associé doit l\'ajouter dans les règles Firebase.', true);
+    },
+  };
+})();
+</script>
+
 <title>Faruk Auto</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -493,13 +577,18 @@ function mergeCol(col, docs) {
   return [...map.values()];
 }
 
-async function connect() {
-  if (!window.claude || !window.claude.use) return;
-  let d = null;
-  try { d = await window.claude.use('db'); } catch { d = null; }
-  if (!d) return;
-  db = d; state.mode = 'db';
-  const onErr = () => { $('#sync').classList.remove('on'); $('#sync span').textContent = 'Synchro interrompue'; };
+/* Base partagée : Firebase (site web) ou base de l'Artifact Claude. */
+async function getBackend() {
+  if (window.faBackend && window.faBackend.configured) return window.faBackend.start();
+  if (window.claude && window.claude.use) { try { return await window.claude.use('db'); } catch { return null; } }
+  return null;
+}
+function connect(d) {
+  db = d; state.mode = window.faBackend && window.faBackend.configured ? 'firebase' : 'db';
+  const onErr = e => {
+    $('#sync').classList.remove('on'); $('#sync span').textContent = 'Synchro interrompue';
+    if (e && e.code === 'permission-denied' && window.faBackend) window.faBackend.denied();
+  };
   let first = {cars:false, cotes:false};
   db.collection('voitures').onSnapshot(s => { state.cars = mergeCol('voitures', s.docs); first.cars = true; renderAll(); }, onErr);
   db.collection('cotes').onSnapshot(s => { state.cotes = mergeCol('cotes', s.docs); first.cotes = true; renderAll(); }, onErr);
@@ -509,6 +598,14 @@ async function connect() {
     renderAll();
   }, onErr);
   $('#sync').classList.add('on'); $('#sync span').textContent = 'Partagé en direct';
+}
+/* Firebase uniquement : remplir une base neuve avec les exemples, sur demande. */
+async function loadExamples() {
+  if (!db || state.mode !== 'firebase') return;
+  for (const c of DEMO.cars) { state.cars.push(structuredClone(c)); saveCar(c); }
+  for (const k of DEMO.cotes) { state.cotes.push(structuredClone(k)); saveCote(k); }
+  state.config = {...state.config, ...structuredClone(DEMO.config)}; saveConfig();
+  renderAll(true); toast('Exemples chargés');
 }
 
 /* ---------- Calculs ---------- */
@@ -588,6 +685,8 @@ function carSelect(c, f, label, list, empty) {
 }
 function exampleBanner() {
   const n = state.cars.filter(c => c.exemple).length + state.cotes.filter(c => c.exemple).length;
+  if (!n && state.mode === 'firebase' && !state.cars.length && !state.cotes.length)
+    return `<div class="banner"><span><b>Base vide.</b> Ajoutez votre première voiture, ou chargez des exemples pour découvrir l'outil.</span><button class="btn sm" data-act="load-examples">Charger des exemples</button></div>`;
   if (!n) return '';
   return `<div class="banner"><span><b>Données d'exemple</b> : les voitures et cotes marquées « exemple » montrent le fonctionnement. Effacez-les quand vous démarrez.</span><button class="btn sm" data-act="clear-examples">Effacer les exemples</button></div>`;
 }
@@ -1128,6 +1227,7 @@ document.addEventListener('click', e => {
     case 'cote': state.cote = id; renderMain(true); break;
     case 'del-cote': { const k = state.cotes.find(x => x.id === id); if (k && confirm('Supprimer la cote « ' + k.modele + ' » et ses ' + (k.obs || []).length + ' relevés ?')) { removeCote(id); state.cote = null; renderMain(true); } break; }
     case 'del-obs': { const k = state.cotes.find(x => x.id === id); if (!k) break; k.obs = k.obs.filter((_, i) => i !== +a.dataset.i); saveCote(k); renderMain(true); break; }
+    case 'load-examples': loadExamples(); break;
     case 'clear-examples': {
       if (!confirm('Effacer toutes les données d\'exemple ? Vos propres fiches sont conservées.')) break;
       state.cars.filter(c => c.exemple).forEach(c => removeCar(c.id));
@@ -1201,17 +1301,16 @@ document.addEventListener('submit', e => {
 });
 
 /* ---------- Démarrage ---------- */
+function loadLocal() {
+  const saved = lsGet('fa.data', null) || structuredClone(DEMO);
+  Object.assign(state, {cars: saved.cars, cotes: saved.cotes, config: {...state.config, ...saved.config}});
+  renderAll(true);
+}
 (function boot() {
-  if (window.claude && window.claude.use) {
-    renderAll(true);
-    connect().then(() => {
-      if (!db) { const saved = lsGet('fa.data', null) || DEMO; Object.assign(state, {cars: saved.cars, cotes: saved.cotes, config: {...state.config, ...saved.config}}); renderAll(true); }
-    });
-  } else {
-    const saved = lsGet('fa.data', null) || structuredClone(DEMO);
-    Object.assign(state, {cars: saved.cars, cotes: saved.cotes, config: {...state.config, ...saved.config}});
-    renderAll(true);
-  }
+  const remote = (window.faBackend && window.faBackend.configured) || (window.claude && window.claude.use);
+  if (!remote) return loadLocal();
+  renderAll(true);
+  getBackend().then(d => d ? connect(d) : loadLocal());
 })();
 </script>
 
