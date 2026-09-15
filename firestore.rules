@@ -1,16 +1,16 @@
 rules_version = '2';
 
-// Seuls les comptes Google listés ici peuvent lire et modifier les données.
-// Remplacez les adresses par celles des associés, puis collez ce fichier dans
-// Firebase > Firestore Database > Règles > Publier.
+// Seuls les comptes listés ici peuvent lire et modifier les données.
+// Les identifiants (UID) se trouvent dans Firebase > Authentication > Utilisateurs,
+// colonne « Identifiant utilisateur ». Collez ce fichier dans
+// Firebase > Firestore Database > Règles, puis cliquez sur Publier.
 service cloud.firestore {
   match /databases/{database}/documents {
     function estAssocie() {
       return request.auth != null
-        && request.auth.token.email_verified == true
-        && request.auth.token.email.lower() in [
-          'associe1@gmail.com',
-          'associe2@gmail.com'
+        && request.auth.uid in [
+          'COLLER_UID_ASSOCIE_1',
+          'COLLER_UID_ASSOCIE_2'
         ];
     }
 

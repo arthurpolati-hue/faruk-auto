@@ -15,20 +15,19 @@ Outil pour organiser notre activité d'achat-revente de voitures d'occasion, de 
 ## Bon à savoir
 
 - leboncoin et mobile.de n'offrent pas d'accès public à leurs annonces : la page ouvre leurs recherches filtrées, elle n'affiche pas les annonces elle-même.
-- Le site se connecte à **Firebase** : chaque associé se connecte avec son compte Google et les données sont partagées en direct. Tant que `firebase-config.js` n'est pas rempli, les données restent dans le navigateur.
+- Le site se connecte à **Firebase** : chaque associé se connecte avec son e-mail et son mot de passe, et les données sont partagées en direct. Tant que `firebase-config.js` n'est pas rempli, les données restent dans le navigateur.
 - Les données présentes au départ sont des **exemples fictifs** (bouton « Effacer les exemples »).
 - Les taux (TVA sur marge, cotisations micro-entreprise) et les frais indicatifs sont des ordres de grandeur, à faire valider par un comptable.
 
 ## Brancher Firebase (une seule fois)
 
-1. Sur https://console.firebase.google.com : **Créer un projet** (Google Analytics inutile).
-2. **Authentication** > Commencer > Méthode de connexion : activer **Google**.
-3. **Authentication** > Paramètres > Domaines autorisés : ajouter `arthurpolati-hue.github.io`.
-4. **Firestore Database** > Créer une base (région `eur3` Europe, mode production).
-5. **Firestore Database** > Règles : coller `firestore.rules` en y mettant les adresses Gmail des associés, puis **Publier**.
-6. Paramètres du projet > Vos applications > icône Web `</>` : copier l'objet de configuration dans `firebase-config.js`, puis pousser sur GitHub.
+1. Sur https://console.firebase.google.com : **Créer un projet**.
+2. **Authentication** > Méthode de connexion : activer **E-mail/Mot de passe**, puis onglet **Utilisateurs** > « Ajouter un utilisateur » pour créer un identifiant par associé.
+3. **Firestore Database** > Créer une base (région `eur3` Europe, mode production).
+4. **Firestore Database** > Règles : coller `firestore.rules` en remplaçant les `COLLER_UID_...` par les identifiants des associés (Authentication > Utilisateurs, colonne « Identifiant utilisateur »), puis **Publier**.
+5. Roue dentée > **Paramètres du projet** > section « Vos applications » > icône Web `</>` : enregistrer l'application, puis copier l'objet `firebaseConfig` affiché dans `firebase-config.js` et pousser sur GitHub.
 
-Pour ajouter un associé plus tard : ajouter son adresse dans les règles Firestore et republier.
+Pour ajouter un associé plus tard : lui créer un utilisateur dans Authentication, puis ajouter son UID dans les règles Firestore et republier.
 
 ## Modifier le site
 
