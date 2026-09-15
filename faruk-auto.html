@@ -1,0 +1,1207 @@
+<title>Faruk Auto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#ECEFF3; --surface:#FFFFFF; --surface-2:#F5F7FA; --ink:#121A23; --ink-2:#465262; --ink-3:#768292;
+  --line:#D8DEE6; --line-2:#E6EAF0;
+  --accent:#1F4FD1; --accent-ink:#FFFFFF; --accent-soft:#E2E9FB; --accent-2:#163C9E;
+  --ok:#14774A; --ok-soft:#DCF0E4; --warn:#9A6200; --warn-soft:#FAEDCC; --ko:#BD3027; --ko-soft:#F8DEDA;
+  --plate:#FFFFFF; --plate-line:#121A23; --eu:#1F4FD1;
+  --shadow:0 1px 2px rgba(18,26,35,.06),0 8px 24px rgba(18,26,35,.08);
+  --display:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --body:"Source Sans 3","Segoe UI",system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1319; --surface:#161D25; --surface-2:#1C242E; --ink:#E6EBF1; --ink-2:#A9B3BF; --ink-3:#7A8594;
+    --line:#2A3440; --line-2:#222B35;
+    --accent:#7196FF; --accent-ink:#0A1024; --accent-soft:#1C2848; --accent-2:#9DB6FF;
+    --ok:#4CC38A; --ok-soft:#14301F; --warn:#E3AA3E; --warn-soft:#332710; --ko:#F0766C; --ko-soft:#3A1B19;
+    --plate:#E9EDF2; --plate-line:#0E1319; --eu:#2B59D8;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1319; --surface:#161D25; --surface-2:#1C242E; --ink:#E6EBF1; --ink-2:#A9B3BF; --ink-3:#7A8594;
+  --line:#2A3440; --line-2:#222B35;
+  --accent:#7196FF; --accent-ink:#0A1024; --accent-soft:#1C2848; --accent-2:#9DB6FF;
+  --ok:#4CC38A; --ok-soft:#14301F; --warn:#E3AA3E; --warn-soft:#332710; --ko:#F0766C; --ko-soft:#3A1B19;
+  --plate:#E9EDF2; --plate-line:#0E1319; --eu:#2B59D8;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* Shell */
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
+.side{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;height:100vh;padding:24px 16px;display:flex;flex-direction:column;gap:28px;border-right:1px solid var(--line);background:var(--surface)}
+.brand{display:flex;align-items:center;gap:10px;padding-inline:8px}
+.brand-mark{font-family:var(--display);font-weight:700;font-size:26px;letter-spacing:.02em;line-height:1;text-transform:uppercase}
+.brand-mark span{color:var(--accent)}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav button{display:grid;grid-template-columns:26px 1fr;align-items:center;gap:6px;text-align:left;border:0;background:none;padding:9px 10px;border-radius:8px;cursor:pointer;color:var(--ink-2);font-weight:600}
+.nav button .step{font-family:var(--display);font-size:15px;color:var(--ink-3);font-weight:600}
+.nav button:hover{background:var(--surface-2);color:var(--ink)}
+.nav button[aria-current="page"]{background:var(--accent-soft);color:var(--accent-2)}
+.nav button[aria-current="page"] .step{color:var(--accent)}
+.nav .count{grid-column:2;font-size:12px;font-weight:500;color:var(--ink-3)}
+.side-foot{margin-top:auto;font-size:12px;color:var(--ink-3);padding-inline:8px;display:flex;flex-direction:column;gap:4px}
+.sync{display:inline-flex;align-items:center;gap:6px}
+.sync i{width:8px;height:8px;border-radius:50%;background:var(--ink-3);display:inline-block}
+.sync.on i{background:var(--ok)}
+main{padding-block:28px 64px;padding-inline:clamp(16px,3vw,40px);min-width:0}
+.wrap{max-width:1180px;margin-inline:auto;display:flex;flex-direction:column;gap:20px}
+
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  .side{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;height:auto;flex-direction:row;align-items:center;gap:12px;padding:10px 16px;border-right:0;border-bottom:1px solid var(--line);overflow-x:auto}
+  .brand-mark{font-size:22px}
+  .nav{flex-direction:row;gap:4px}
+  .nav button{grid-template-columns:auto auto;white-space:nowrap;padding:7px 10px}
+  .nav .count,.side-foot{display:none}
+  main{padding-block:20px 56px}
+}
+
+/* Page head */
+.page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.eyebrow{margin:0 0 2px;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--accent)}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(34px,4.5vw,46px);line-height:1;margin:0;letter-spacing:.005em;text-wrap:balance}
+h2{font-family:var(--display);font-weight:600;font-size:24px;line-height:1.1;margin:0;text-wrap:balance}
+h3{font-size:13px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-2);margin:0}
+.lede{margin:8px 0 0;color:var(--ink-2);max-width:62ch}
+
+/* Panels */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.panel-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.panel-head p{margin:4px 0 0;color:var(--ink-3);font-size:14px}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px;align-items:start}
+.note{font-size:13px;color:var(--ink-3);margin:0}
+.callout{display:flex;gap:12px;align-items:flex-start;background:var(--surface-2);border:1px dashed var(--line);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--ink-2)}
+.callout b{color:var(--ink)}
+.banner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--warn-soft);color:var(--ink);border-radius:10px;padding:10px 14px;font-size:14px}
+
+/* Forms */
+.fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.fields .wide{grid-column:1/-1}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label,.lbl{font-size:12px;font-weight:600;color:var(--ink-2)}
+.field label .cg{font-family:var(--display);font-weight:600;color:var(--ink-3);margin-right:4px}
+input[type=text],input[type=number],input[type=tel],input[type=url],input[type=date],select,textarea{width:100%;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:15px}
+input:hover,select:hover,textarea:hover{border-color:var(--ink-3)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+textarea{resize:vertical;min-height:84px}
+.suffix{position:relative}
+.suffix input{padding-right:34px}
+.suffix span{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--ink-3);font-size:13px;pointer-events:none}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;text-decoration:none;white-space:nowrap;font-size:14px}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{background:var(--accent-2);border-color:var(--accent-2)}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--ink-2)}
+.btn.ghost:hover{background:var(--surface-2)}
+.btn.danger{color:var(--ko)}
+.btn.sm{padding:5px 10px;font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.site-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.site{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border-radius:10px;text-decoration:none;color:var(--ink);border:1px solid var(--line);background:var(--surface-2)}
+.site:hover{border-color:var(--accent)}
+.site b{font-family:var(--display);font-size:22px;font-weight:600;line-height:1.1}
+.site span{font-size:12px;color:var(--ink-3)}
+.site.lbc b{color:#EC5A13}
+.site.mde b{color:var(--accent)}
+@media (max-width:480px){.site-btns{grid-template-columns:1fr}}
+
+/* Chips & plate */
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:999px;background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line-2);white-space:nowrap}
+.chip.lbc{color:#C24A0E;background:rgba(236,90,19,.1);border-color:transparent}
+.chip.mde{color:var(--accent-2);background:var(--accent-soft);border-color:transparent}
+.chip.ex{color:var(--warn);background:var(--warn-soft);border-color:transparent}
+.chip.ok{color:var(--ok);background:var(--ok-soft);border-color:transparent}
+.chip.warn{color:var(--warn);background:var(--warn-soft);border-color:transparent}
+.chip.ko{color:var(--ko);background:var(--ko-soft);border-color:transparent}
+.plate{display:inline-flex;align-items:stretch;border:1.5px solid var(--plate-line);border-radius:4px;overflow:hidden;background:var(--plate);height:24px;flex:none}
+.plate .eu{background:var(--eu);color:#fff;font-size:9px;font-weight:700;width:14px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:2px}
+.plate .txt{font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:.06em;color:#121A23;padding:0 6px;display:flex;align-items:center}
+.plate.none .txt{color:#8A94A1;letter-spacing:.2em}
+
+/* Saved searches */
+.saved{display:flex;flex-direction:column}
+.saved-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px 0;border-top:1px solid var(--line-2)}
+.saved-item:first-child{border-top:0;padding-top:0}
+.saved-item .t{font-weight:600}
+.saved-item .d{font-size:13px;color:var(--ink-3)}
+@media (max-width:560px){.saved-item{grid-template-columns:1fr}}
+
+/* Board */
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.check{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--ink-2);cursor:pointer}
+.check input{width:16px;height:16px;accent-color:var(--accent)}
+.board-scroll{overflow-x:auto;margin-inline:calc(-1 * clamp(16px,3vw,40px));padding-inline:clamp(16px,3vw,40px);padding-bottom:8px}
+.board{display:grid;grid-template-columns:repeat(6,minmax(230px,1fr));gap:12px;min-width:max-content}
+.col{display:flex;flex-direction:column;gap:8px;min-width:230px}
+.col-head{display:flex;justify-content:space-between;align-items:baseline;padding:4px 4px 6px;border-bottom:2px solid var(--line)}
+.col-head b{font-family:var(--display);font-size:20px;font-weight:600}
+.col-head span{font-size:13px;color:var(--ink-3)}
+.col[data-stage="vendue"] .col-head{border-color:var(--ok)}
+.col[data-stage="rdv"] .col-head,.col[data-stage="achetee"] .col-head{border-color:var(--accent)}
+.card{display:flex;flex-direction:column;gap:8px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;width:100%}
+.card:hover{border-color:var(--ink-3);box-shadow:var(--shadow)}
+.card .top{display:flex;justify-content:space-between;gap:6px;align-items:center}
+.card .name{font-weight:700;font-size:15px;line-height:1.2}
+.card .ver{font-size:13px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .meta{font-size:13px;color:var(--ink-2)}
+.card .price{font-family:var(--display);font-size:22px;font-weight:600;line-height:1}
+.card .foot{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:12px;color:var(--ink-3);border-top:1px solid var(--line-2);padding-top:8px}
+.delta{font-size:12px;font-weight:600}
+.delta.good{color:var(--ok)} .delta.bad{color:var(--ko)}
+.empty-col{font-size:13px;color:var(--ink-3);padding:14px 8px;border:1px dashed var(--line);border-radius:10px;text-align:center}
+.bar{height:4px;background:var(--line-2);border-radius:4px;overflow:hidden;flex:1}
+.bar i{display:block;height:100%;background:var(--accent)}
+
+/* Drawer */
+.drawer-bg{position:fixed;inset:0;background:rgba(10,14,20,.42);z-index:50;display:flex;justify-content:flex-end}
+.drawer{background:var(--bg);width:min(620px,100%);height:100%;overflow-y:auto;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.drawer-head{position:sticky;top:0;z-index:2;background:var(--surface);border-bottom:1px solid var(--line);padding:calc(14px + env(safe-area-inset-top,0px)) 20px 14px;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.drawer-body{padding:20px;display:flex;flex-direction:column;gap:16px}
+.call{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--accent-soft);border-radius:10px;padding:12px 14px}
+.call .num{font-family:var(--display);font-size:26px;font-weight:600;color:var(--accent-2);text-decoration:none;letter-spacing:.02em}
+.qlist{display:flex;flex-direction:column}
+.qlist label{display:grid;grid-template-columns:20px 1fr;gap:10px;padding:8px 0;border-top:1px solid var(--line-2);cursor:pointer;font-size:15px}
+.qlist label:first-child{border-top:0}
+.qlist input{width:17px;height:17px;margin-top:2px;accent-color:var(--ok)}
+.qlist input:checked + span{color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--ink-3)}
+.stages{display:flex;gap:4px;flex-wrap:wrap}
+.stages button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 11px;font-size:13px;font-weight:600;color:var(--ink-2);cursor:pointer}
+.stages button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* Inspection */
+.insp-top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:end}
+@media (max-width:640px){.insp-top{grid-template-columns:1fr}}
+.tally{display:flex;gap:18px;flex-wrap:wrap}
+.tally div{display:flex;flex-direction:column}
+.tally b{font-family:var(--display);font-size:32px;font-weight:600;line-height:1}
+.tally span{font-size:12px;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.tally .ok b{color:var(--ok)} .tally .warn b{color:var(--warn)} .tally .ko b{color:var(--ko)}
+.verdict{border-radius:10px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-weight:600}
+.verdict.ok{background:var(--ok-soft);color:var(--ok)}
+.verdict.warn{background:var(--warn-soft);color:var(--warn)}
+.verdict.ko{background:var(--ko-soft);color:var(--ko)}
+.verdict.idle{background:var(--surface-2);color:var(--ink-2)}
+.sec{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.sec summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;cursor:pointer}
+.sec summary::-webkit-details-marker{display:none}
+.sec summary h2{font-size:22px}
+.sec summary .prog{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-3);min-width:150px}
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 16px;padding:12px 18px;border-top:1px solid var(--line-2);align-items:center}
+.item[data-s="ko"]{background:linear-gradient(90deg,var(--ko-soft),transparent 60%)}
+.item[data-s="warn"]{background:linear-gradient(90deg,var(--warn-soft),transparent 60%)}
+.item .lab{font-weight:600}
+.item .hint{font-size:13px;color:var(--ink-3)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;padding:6px 11px;font-size:13px;font-weight:700;cursor:pointer;color:var(--ink-3)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[data-v="ok"][aria-pressed="true"]{background:var(--ok);color:#fff}
+.seg button[data-v="warn"][aria-pressed="true"]{background:var(--warn);color:#fff}
+.seg button[data-v="ko"][aria-pressed="true"]{background:var(--ko);color:#fff}
+.item .extra{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:8px}
+.item .extra input{font-size:14px;padding:6px 9px}
+@media (max-width:560px){.item{grid-template-columns:1fr}.item .extra{grid-template-columns:1fr 110px}}
+
+/* Money */
+.calc{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:20px;align-items:start}
+@media (max-width:820px){.calc{grid-template-columns:1fr}}
+.ledger{display:flex;flex-direction:column;background:var(--surface-2);border-radius:10px;padding:6px 16px}
+.ledger .l{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line-2);font-variant-numeric:tabular-nums}
+.ledger .l:first-child{border-top:0}
+.ledger .l span{color:var(--ink-2)}
+.ledger .l.sub{font-size:13px;padding:4px 0;border-top:0}
+.ledger .l.sub span{padding-left:12px;color:var(--ink-3)}
+.ledger .l.total{border-top:2px solid var(--ink)}
+.ledger .l.total b{font-family:var(--display);font-size:28px;font-weight:600;line-height:1}
+.pos{color:var(--ok)} .neg{color:var(--ko)}
+.bigout{display:flex;flex-direction:column;gap:2px;padding:16px;border-radius:10px;background:var(--accent-soft)}
+.bigout span{font-size:13px;font-weight:600;color:var(--accent-2)}
+.bigout b{font-family:var(--display);font-size:44px;font-weight:700;line-height:1;color:var(--accent-2)}
+.bigout small{color:var(--ink-2);font-size:13px}
+.cotes{display:grid;grid-template-columns:260px minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:820px){.cotes{grid-template-columns:1fr}}
+.mlist{display:flex;flex-direction:column;gap:4px}
+.mlist button{display:grid;grid-template-columns:1fr auto;gap:2px 8px;text-align:left;border:1px solid transparent;background:none;border-radius:8px;padding:8px 10px;cursor:pointer}
+.mlist button:hover{background:var(--surface-2)}
+.mlist button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent-soft)}
+.mlist .m{font-weight:600}
+.mlist .p{font-family:var(--display);font-size:18px;font-weight:600}
+.mlist .n{font-size:12px;color:var(--ink-3)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.stats div{display:flex;flex-direction:column}
+.stats span{font-size:12px;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.stats b{font-family:var(--display);font-size:26px;font-weight:600;line-height:1.1}
+@media (max-width:520px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Tables */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-3);font-weight:700;text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line-2);white-space:nowrap}
+td.r,th.r{text-align:right}
+tbody tr:last-child td{border-bottom:0}
+
+/* KPIs & charts */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:4px}
+.kpi span{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.kpi b{font-family:var(--display);font-size:36px;font-weight:600;line-height:1}
+.kpi small{font-size:13px;color:var(--ink-2)}
+.kpi.lead{background:var(--ink);border-color:var(--ink)}
+.kpi.lead span,.kpi.lead small{color:var(--bg);opacity:.75}
+.kpi.lead b{color:var(--bg)}
+svg text{font-family:var(--body)}
+.legend{display:flex;gap:16px;font-size:13px;color:var(--ink-2);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.hbars{display:flex;flex-direction:column;gap:10px}
+.hbar{display:grid;grid-template-columns:minmax(110px,170px) minmax(0,1fr) auto;gap:12px;align-items:center;font-size:14px}
+.hbar .name{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hbar .track{height:14px;background:var(--surface-2);border-radius:3px;overflow:hidden}
+.hbar .track i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.hbar .val{font-variant-numeric:tabular-nums;font-weight:600;min-width:74px;text-align:right}
+@media (max-width:520px){.hbar{grid-template-columns:1fr auto}.hbar .track{grid-column:1/-1;grid-row:2}}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-weight:600;font-size:14px;z-index:80;box-shadow:var(--shadow)}
+.empty{padding:28px;text-align:center;color:var(--ink-3);border:1px dashed var(--line);border-radius:12px}
+@media (prefers-reduced-motion:no-preference){.card,.btn,.site{transition:border-color .15s,box-shadow .15s,background .15s}}
+</style>
+
+<div class="app">
+  <aside class="side">
+    <div class="brand"><div class="brand-mark">Faruk<span>·</span>Auto</div></div>
+    <nav class="nav" id="nav" aria-label="Sections"></nav>
+    <div class="side-foot">
+      <span class="sync" id="sync"><i></i><span>Enregistré sur cet appareil</span></span>
+      <span>Achat · revente VO</span>
+    </div>
+  </aside>
+  <main><div class="wrap" id="main"></div></main>
+</div>
+<div id="drawer"></div>
+<div id="toast" class="toast" hidden></div>
+
+<script>
+const DEMO = {"cars": [{"id": "ex01", "exemple": true, "marque": "Peugeot", "modele": "308", "version": "1.6 BlueHDi 120 Allure", "annee": 2016, "km": 142000, "carburant": "Diesel", "boite": "Manuelle", "immat": "DX-418-KP", "source": "leboncoin", "lien": "", "prixAnnonce": 6900, "ville": "Villeurbanne (69)", "vendeur": "Particulier", "tel": "06 12 34 56 78", "statut": "vendue", "notes": "", "questions": {}, "inspection": {}, "prixAchat": 6200, "frais": {"reparation": 380, "ct": 0, "carteGrise": 280, "transport": 0, "preparation": 120, "autres": 0}, "prixReventeCible": 8490, "prixVente": 8490, "dateAchat": "2026-04-03", "dateVente": "2026-04-24", "createdAt": "2026-03-28"}, {"id": "ex02", "exemple": true, "marque": "Renault", "modele": "Clio IV", "version": "0.9 TCe 90 Intens", "annee": 2017, "km": 98000, "carburant": "Essence", "boite": "Manuelle", "immat": "EM-207-TR", "source": "leboncoin", "lien": "", "prixAnnonce": 5900, "ville": "Lyon 7e", "vendeur": "Particulier", "tel": "06 21 43 65 87", "statut": "vendue", "notes": "", "questions": {}, "inspection": {}, "prixAchat": 5400, "frais": {"reparation": 450, "ct": 78, "carteGrise": 230, "transport": 0, "preparation": 90, "autres": 0}, "prixReventeCible": 7490, "prixVente": 7290, "dateAchat": "2026-04-15", "dateVente": "2026-05-09", "createdAt": "2026-04-10"}, {"id": "ex03", "exemple": true, "marque": "Volkswagen", "modele": "Golf VII", "version": "1.6 TDI 110 Confortline", "annee": 2015, "km": 165000, "carburant": "Diesel", "boite": "Manuelle", "immat": "FB-930-LM", "source": "mobile.de", "lien": "", "prixAnnonce": 6490, "ville": "Freiburg (DE)", "vendeur": "Autohaus", "tel": "", "statut": "vendue", "notes": "Import : COC + ZB II récupérés.", "questions": {}, "inspection": {}, "prixAchat": 5900, "frais": {"reparation": 300, "ct": 0, "carteGrise": 420, "transport": 650, "preparation": 150, "autres": 0}, "prixReventeCible": 8900, "prixVente": 8900, "dateAchat": "2026-05-02", "dateVente": "2026-06-01", "createdAt": "2026-04-25"}, {"id": "ex04", "exemple": true, "marque": "Peugeot", "modele": "208", "version": "1.2 PureTech 82 Active", "annee": 2018, "km": 76000, "carburant": "Essence", "boite": "Manuelle", "immat": "EZ-551-HB", "source": "leboncoin", "lien": "", "prixAnnonce": 7300, "ville": "Vénissieux (69)", "vendeur": "Particulier", "tel": "07 45 12 89 30", "statut": "vendue", "notes": "", "questions": {}, "inspection": {}, "prixAchat": 6800, "frais": {"reparation": 0, "ct": 0, "carteGrise": 260, "transport": 0, "preparation": 100, "autres": 0}, "prixReventeCible": 8990, "prixVente": 8990, "dateAchat": "2026-05-20", "dateVente": "2026-06-08", "createdAt": "2026-05-16"}, {"id": "ex05", "exemple": true, "marque": "Toyota", "modele": "Yaris III", "version": "100h Dynamic", "annee": 2017, "km": 110000, "carburant": "Hybride", "boite": "Automatique", "immat": "EH-062-ZN", "source": "leboncoin", "lien": "", "prixAnnonce": 8500, "ville": "Bron (69)", "vendeur": "Particulier", "tel": "06 33 71 20 58", "statut": "vendue", "notes": "", "questions": {}, "inspection": {}, "prixAchat": 7900, "frais": {"reparation": 220, "ct": 0, "carteGrise": 300, "transport": 0, "preparation": 110, "autres": 0}, "prixReventeCible": 10490, "prixVente": 10490, "dateAchat": "2026-06-10", "dateVente": "2026-06-22", "createdAt": "2026-06-05"}, {"id": "ex06", "exemple": true, "marque": "Renault", "modele": "Clio IV", "version": "1.5 dCi 75 Life", "annee": 2016, "km": 125000, "carburant": "Diesel", "boite": "Manuelle", "immat": "DY-735-QS", "source": "leboncoin", "lien": "", "prixAnnonce": 4800, "ville": "Vaulx-en-Velin (69)", "vendeur": "Particulier", "tel": "06 58 02 14 96", "statut": "vendue", "notes": "Embrayage fatigué, négocié -500 €.", "questions": {}, "inspection": {}, "prixAchat": 4300, "frais": {"reparation": 520, "ct": 78, "carteGrise": 230, "transport": 0, "preparation": 90, "autres": 0}, "prixReventeCible": 6290, "prixVente": 5990, "dateAchat": "2026-07-01", "dateVente": "2026-07-30", "createdAt": "2026-06-27"}, {"id": "ex07", "exemple": true, "marque": "Volkswagen", "modele": "Golf VII", "version": "2.0 TDI 150 Carat DSG", "annee": 2016, "km": 138000, "carburant": "Diesel", "boite": "Automatique", "immat": "FF-204-GD", "source": "mobile.de", "lien": "", "prixAnnonce": 7690, "ville": "Stuttgart (DE)", "vendeur": "Autohaus", "tel": "", "statut": "vendue", "notes": "", "questions": {}, "inspection": {}, "prixAchat": 7200, "frais": {"reparation": 180, "ct": 0, "carteGrise": 480, "transport": 700, "preparation": 150, "autres": 0}, "prixReventeCible": 10490, "prixVente": 10200, "dateAchat": "2026-07-12", "dateVente": "2026-08-20", "createdAt": "2026-07-04"}, {"id": "ex08", "exemple": true, "marque": "Peugeot", "modele": "308", "version": "1.2 PureTech 130 GT Line", "annee": 2017, "km": 88000, "carburant": "Essence", "boite": "Manuelle", "immat": "EP-866-VA", "source": "leboncoin", "lien": "", "prixAnnonce": 7800, "ville": "Écully (69)", "vendeur": "Particulier", "tel": "06 90 11 47 25", "statut": "vendue", "notes": "", "questions": {}, "inspection": {}, "prixAchat": 7100, "frais": {"reparation": 350, "ct": 0, "carteGrise": 300, "transport": 0, "preparation": 120, "autres": 0}, "prixReventeCible": 9290, "prixVente": 8900, "dateAchat": "2026-08-05", "dateVente": "2026-09-02", "createdAt": "2026-08-01"}, {"id": "ex09", "exemple": true, "marque": "Audi", "modele": "A3 Sportback", "version": "1.6 TDI 116 S line", "annee": 2016, "km": 131000, "carburant": "Diesel", "boite": "Manuelle", "immat": "GA-114-RC", "source": "mobile.de", "lien": "", "prixAnnonce": 9990, "ville": "München (DE)", "vendeur": "Autohaus", "tel": "", "statut": "vente", "notes": "En ligne sur leboncoin depuis le 04/09.", "questions": {}, "inspection": {}, "prixAchat": 9800, "frais": {"reparation": 240, "ct": 0, "carteGrise": 520, "transport": 700, "preparation": 150, "autres": 0}, "prixReventeCible": 13490, "prixVente": null, "dateAchat": "2026-08-28", "dateVente": "", "createdAt": "2026-08-18"}, {"id": "ex10", "exemple": true, "marque": "Dacia", "modele": "Sandero II", "version": "0.9 TCe 90 Stepway", "annee": 2019, "km": 64000, "carburant": "Essence", "boite": "Manuelle", "immat": "FK-309-XW", "source": "leboncoin", "lien": "", "prixAnnonce": 6200, "ville": "Givors (69)", "vendeur": "Particulier", "tel": "06 74 58 32 10", "statut": "achetee", "notes": "Changer les 2 pneus avant avant la mise en vente.", "questions": {"q_raison": true, "q_main": true, "q_entretien": true, "q_distrib": true, "q_accident": true, "q_ct": true, "q_voyants": true, "q_cg": true, "q_vin": true, "q_cles": true, "q_pneus": true, "q_prix": true, "q_dispo": true}, "inspection": {"doc_cg": {"s": "ok"}, "doc_id": {"s": "ok"}, "doc_vin": {"s": "ok"}, "doc_gage": {"s": "ok"}, "doc_cession": {"s": "ok"}, "doc_ct": {"s": "ok", "n": "CT du 02/08/2026, RAS"}, "doc_entretien": {"s": "warn", "n": "Factures seulement depuis 2023"}, "car_teinte": {"s": "ok"}, "car_jeux": {"s": "ok"}, "car_rouille": {"s": "ok"}, "car_chocs": {"s": "warn", "n": "Rayure pare-choc arrière", "c": 60}, "car_vitrage": {"s": "ok"}, "car_chassis": {"s": "ok"}, "pn_usure": {"s": "ko", "n": "Pneus avant à 2 mm", "c": 180}, "pn_dot": {"s": "ok"}, "fr_disques": {"s": "ok"}, "roue_secours": {"s": "ok", "n": "Galette présente"}, "antivol": {"s": "ok"}, "cric": {"s": "ok"}, "niv_huile": {"s": "ok"}, "niv_refroid": {"s": "ok"}, "niv_frein": {"s": "ok"}, "niv_da": {"s": "ok"}, "mot_fuites": {"s": "ok"}, "mot_froid": {"s": "ok"}, "mot_fumee": {"s": "ok"}, "int_tissus": {"s": "warn", "n": "Tache siège conducteur", "c": 40}, "int_plastiques": {"s": "ok"}, "int_usure": {"s": "ok"}, "int_clim": {"s": "ok"}, "int_elec": {"s": "ok"}, "int_voyants": {"s": "ok"}, "int_cles": {"s": "ok"}, "diag_codes": {"s": "ok"}, "diag_abs": {"s": "ok"}, "diag_airbag": {"s": "ok"}, "diag_km": {"s": "ok"}, "diag_vin": {"s": "ok"}, "es_roulement": {"s": "ok"}, "es_embrayage": {"s": "ok"}, "es_boite": {"s": "ok"}, "es_freinage": {"s": "ok"}, "es_direction": {"s": "ok"}, "es_suspension": {"s": "ok"}, "es_110": {"s": "ok", "n": "RAS à 130 km/h"}}, "prixAchat": 5600, "frais": {"reparation": 280, "ct": 0, "carteGrise": 250, "transport": 0, "preparation": 100, "autres": 0}, "prixReventeCible": 7690, "prixVente": null, "dateAchat": "2026-09-10", "dateVente": "", "createdAt": "2026-09-03"}, {"id": "ex11", "exemple": true, "marque": "Toyota", "modele": "Yaris III", "version": "100h Design", "annee": 2018, "km": 92000, "carburant": "Hybride", "boite": "Automatique", "immat": "", "source": "leboncoin", "lien": "", "prixAnnonce": 9500, "ville": "Caluire (69)", "vendeur": "M. Bernard (particulier)", "tel": "06 98 76 54 32", "statut": "rdv", "notes": "RDV samedi 19/09 à 10h, moteur froid demandé. Vendeur ouvert à 9 000 € si tout est bon.", "questions": {"q_raison": true, "q_main": true, "q_entretien": true, "q_distrib": true, "q_accident": true, "q_ct": true, "q_cg": true, "q_cles": true, "q_prix": true, "q_dispo": true}, "inspection": {}, "prixAchat": null, "frais": {}, "prixReventeCible": 11200, "prixVente": null, "dateAchat": "", "dateVente": "", "createdAt": "2026-09-11"}, {"id": "ex12", "exemple": true, "marque": "Peugeot", "modele": "208", "version": "1.2 PureTech 110 Allure", "annee": 2019, "km": 71000, "carburant": "Essence", "boite": "Manuelle", "immat": "", "source": "leboncoin", "lien": "", "prixAnnonce": 8900, "ville": "Meyzieu (69)", "vendeur": "Particulier", "tel": "07 11 22 33 44", "statut": "appeler", "notes": "", "questions": {}, "inspection": {}, "prixAchat": null, "frais": {}, "prixReventeCible": null, "prixVente": null, "dateAchat": "", "dateVente": "", "createdAt": "2026-09-14"}, {"id": "ex13", "exemple": true, "marque": "Skoda", "modele": "Octavia III Combi", "version": "2.0 TDI 150 Style DSG", "annee": 2017, "km": 149000, "carburant": "Diesel", "boite": "Automatique", "immat": "", "source": "mobile.de", "lien": "", "prixAnnonce": 8700, "ville": "Karlsruhe (DE)", "vendeur": "Autohaus", "tel": "+49 171 2345678", "statut": "appeler", "notes": "", "questions": {}, "inspection": {}, "prixAchat": null, "frais": {}, "prixReventeCible": null, "prixVente": null, "dateAchat": "", "dateVente": "", "createdAt": "2026-09-13"}, {"id": "ex14", "exemple": true, "marque": "Renault", "modele": "Clio V", "version": "1.0 TCe 100 Zen", "annee": 2020, "km": 58000, "carburant": "Essence", "boite": "Manuelle", "immat": "", "source": "leboncoin", "lien": "", "prixAnnonce": 10900, "ville": "Saint-Priest (69)", "vendeur": "Particulier", "tel": "", "statut": "repere", "notes": "Prix un peu haut, à surveiller.", "questions": {}, "inspection": {}, "prixAchat": null, "frais": {}, "prixReventeCible": null, "prixVente": null, "dateAchat": "", "dateVente": "", "createdAt": "2026-09-15"}], "cotes": [{"id": "cx01", "exemple": true, "modele": "Peugeot 308", "obs": [{"prix": 8490, "annee": 2016, "km": 139000, "source": "leboncoin", "date": "2026-08-12"}, {"prix": 7990, "annee": 2015, "km": 158000, "source": "leboncoin", "date": "2026-08-19"}, {"prix": 9200, "annee": 2017, "km": 112000, "source": "leboncoin", "date": "2026-08-25"}, {"prix": 8900, "annee": 2016, "km": 121000, "source": "La Centrale", "date": "2026-09-01"}, {"prix": 10490, "annee": 2018, "km": 86000, "source": "leboncoin", "date": "2026-09-06"}, {"prix": 7600, "annee": 2015, "km": 171000, "source": "leboncoin", "date": "2026-09-09"}, {"prix": 8290, "annee": 2016, "km": 147000, "source": "leboncoin", "date": "2026-09-13"}]}, {"id": "cx02", "exemple": true, "modele": "Renault Clio IV", "obs": [{"prix": 7290, "annee": 2017, "km": 95000, "source": "leboncoin", "date": "2026-08-10"}, {"prix": 6490, "annee": 2016, "km": 128000, "source": "leboncoin", "date": "2026-08-18"}, {"prix": 7900, "annee": 2018, "km": 81000, "source": "La Centrale", "date": "2026-08-27"}, {"prix": 5990, "annee": 2015, "km": 149000, "source": "leboncoin", "date": "2026-09-03"}, {"prix": 6990, "annee": 2017, "km": 110000, "source": "leboncoin", "date": "2026-09-08"}, {"prix": 8400, "annee": 2018, "km": 69000, "source": "leboncoin", "date": "2026-09-12"}]}, {"id": "cx03", "exemple": true, "modele": "Volkswagen Golf VII", "obs": [{"prix": 9900, "annee": 2016, "km": 140000, "source": "leboncoin", "date": "2026-08-14"}, {"prix": 8900, "annee": 2015, "km": 162000, "source": "leboncoin", "date": "2026-08-22"}, {"prix": 11490, "annee": 2017, "km": 118000, "source": "La Centrale", "date": "2026-09-02"}, {"prix": 10200, "annee": 2016, "km": 131000, "source": "leboncoin", "date": "2026-09-07"}, {"prix": 12300, "annee": 2018, "km": 98000, "source": "leboncoin", "date": "2026-09-11"}]}, {"id": "cx04", "exemple": true, "modele": "Toyota Yaris III", "obs": [{"prix": 10490, "annee": 2017, "km": 108000, "source": "leboncoin", "date": "2026-08-16"}, {"prix": 11200, "annee": 2018, "km": 90000, "source": "leboncoin", "date": "2026-08-29"}, {"prix": 9800, "annee": 2016, "km": 124000, "source": "leboncoin", "date": "2026-09-04"}, {"prix": 11900, "annee": 2019, "km": 72000, "source": "La Centrale", "date": "2026-09-10"}, {"prix": 10900, "annee": 2018, "km": 99000, "source": "leboncoin", "date": "2026-09-14"}]}, {"id": "cx05", "exemple": true, "modele": "Peugeot 208", "obs": [{"prix": 8990, "annee": 2018, "km": 78000, "source": "leboncoin", "date": "2026-08-11"}, {"prix": 9490, "annee": 2019, "km": 70000, "source": "leboncoin", "date": "2026-08-24"}, {"prix": 8200, "annee": 2017, "km": 96000, "source": "leboncoin", "date": "2026-09-02"}, {"prix": 9900, "annee": 2019, "km": 61000, "source": "La Centrale", "date": "2026-09-09"}, {"prix": 7600, "annee": 2016, "km": 112000, "source": "leboncoin", "date": "2026-09-13"}]}], "config": {"regime": "marge", "tauxMicro": 12.3, "recherches": [{"id": "rx01", "marque": "Peugeot", "modele": "308", "prixMin": "", "prixMax": 8000, "anneeMin": 2015, "kmMax": 160000, "carburant": "Diesel", "boite": ""}, {"id": "rx02", "marque": "Toyota", "modele": "Yaris", "prixMin": "", "prixMax": 10000, "anneeMin": 2016, "kmMax": 130000, "carburant": "Hybride", "boite": "Automatique"}, {"id": "rx03", "marque": "Volkswagen", "modele": "Golf", "prixMin": "", "prixMax": 8000, "anneeMin": 2015, "kmMax": 170000, "carburant": "Diesel", "boite": ""}]}};
+
+/* ---------- Référentiels ---------- */
+const VIEWS = [
+  {k:'recherche', l:'Recherche', step:'1'},
+  {k:'prospection', l:'Prospection', step:'2'},
+  {k:'inspection', l:'Inspection', step:'3'},
+  {k:'marges', l:'Marges & cote', step:'4'},
+  {k:'bilan', l:'Bilan', step:'5'},
+];
+const STAGES = [
+  {k:'repere', l:'Repérée'}, {k:'appeler', l:'À appeler'}, {k:'rdv', l:'RDV / essai'},
+  {k:'achetee', l:'Achetée'}, {k:'vente', l:'En vente'}, {k:'vendue', l:'Vendue'},
+];
+const STAGE_LABEL = Object.fromEntries([...STAGES, {k:'abandon', l:'Abandonnée'}].map(s => [s.k, s.l]));
+const MARQUES = ['Audi','BMW','Citroën','Dacia','Fiat','Ford','Hyundai','Kia','Mercedes-Benz','Mini','Nissan','Opel','Peugeot','Porsche','Renault','Seat','Skoda','Toyota','Volkswagen','Volvo'];
+const MDE_MAKE = {'Audi':1900,'BMW':3500,'Citroën':5900,'Fiat':8800,'Ford':9000,'Hyundai':11600,'Kia':13200,'Mercedes-Benz':17200,'Mini':17500,'Nissan':18700,'Opel':19000,'Peugeot':19800,'Porsche':20100,'Renault':20700,'Seat':22500,'Skoda':22900,'Toyota':24100,'Volkswagen':25200,'Volvo':25100};
+const CARBURANTS = ['Essence','Diesel','Hybride','Électrique','GPL'];
+const LBC_FUEL = {'Essence':1,'Diesel':2,'GPL':3,'Électrique':4,'Hybride':6};
+const MDE_FUEL = {'Essence':'PETROL','Diesel':'DIESEL','GPL':'LPG','Électrique':'ELECTRICITY','Hybride':'HYBRID'};
+const FRAIS = [
+  {k:'reparation', l:'Remise en état'}, {k:'ct', l:'Contrôle technique'}, {k:'carteGrise', l:'Carte grise'},
+  {k:'transport', l:'Transport / import'}, {k:'preparation', l:'Préparation, nettoyage'}, {k:'autres', l:'Annonce, divers'},
+];
+const QUESTIONS = [
+  ['q_raison','Pourquoi vendez-vous la voiture ?'],
+  ['q_main','Depuis quand l\'avez-vous ? Combien de propriétaires ?'],
+  ['q_entretien','Carnet d\'entretien et factures disponibles ?'],
+  ['q_distrib','Courroie de distribution faite ? À quel kilométrage ?'],
+  ['q_accident','Accident, choc, élément de carrosserie refait ?'],
+  ['q_ct','Date du dernier contrôle technique ? Contre-visite ?'],
+  ['q_voyants','Un voyant allumé au tableau de bord ?'],
+  ['q_cg','Carte grise à votre nom ? Véhicule non gagé ?'],
+  ['q_vin','Pouvez-vous m\'envoyer l\'immatriculation / le VIN ? (historique HistoVec)'],
+  ['q_cles','Combien de clés ?'],
+  ['q_pneus','État des pneus et des freins ?'],
+  ['q_prix','Le prix est-il négociable ? Votre dernier prix ?'],
+  ['q_dispo','Quand pour un essai ? (demander le moteur froid)'],
+];
+const QUESTIONS_IMPORT = [
+  ['q_papiers_de','Papiers allemands ZB I + ZB II et certificat COC fournis ?'],
+  ['q_plaques','Plaques export / transit possibles pour le rapatriement ?'],
+  ['q_tva','Prix TTC ou HT ? Facture avec TVA récupérable ?'],
+];
+const CHECKLIST = [
+  {k:'docs', l:'Papiers du véhicule', items:[
+    ['doc_cg','Carte grise au nom du vendeur','Nom identique à celui de la pièce d\'identité'],
+    ['doc_id','Pièce d\'identité du vendeur',''],
+    ['doc_vin','VIN de la carte grise (champ E) = VIN du châssis','Frappe à froid, plaque constructeur, bas du pare-brise'],
+    ['doc_gage','Certificat de situation administrative (non-gage)','Moins de 15 jours, via HistoVec'],
+    ['doc_cession','Certificat de cession Cerfa 15776 rempli','En deux exemplaires, date et heure de la vente'],
+    ['doc_ct','Contrôle technique de moins de 6 mois','Lire les défaillances mineures notées'],
+    ['doc_entretien','Carnet et factures cohérents avec le kilométrage',''],
+  ]},
+  {k:'carrosserie', l:'Carrosserie & châssis', items:[
+    ['car_teinte','Écarts de teinte entre éléments','Regarder en lumière rasante, jauge d\'épaisseur si dispo'],
+    ['car_jeux','Jeux réguliers entre portes, capot, hayon',''],
+    ['car_rouille','Rouille : bas de caisse, passages de roue, bas de portes',''],
+    ['car_chocs','Rayures, bosses, pare-chocs',''],
+    ['car_vitrage','Pare-brise (impacts), optiques, rétroviseurs',''],
+    ['car_chassis','Longerons et soubassement','Traces de choc, soudures, plis'],
+  ]},
+  {k:'roues', l:'Pneus, freins, roues', items:[
+    ['pn_usure','Usure des pneus régulière et > 3 mm','Usure d\'un seul côté = géométrie à revoir'],
+    ['pn_dot','Date DOT des pneus de moins de 6 ans','4 chiffres sur le flanc : semaine + année'],
+    ['fr_disques','Disques et plaquettes','Bourrelet sur le disque, épaisseur des plaquettes'],
+    ['roue_secours','Roue de secours ou kit anti-crevaison',''],
+    ['antivol','Écrou antivol et sa clé présents','Sans la clé, impossible de démonter la roue'],
+    ['cric','Cric et clé de roue',''],
+  ]},
+  {k:'moteur', l:'Moteur & niveaux', items:[
+    ['niv_huile','Niveau et aspect de l\'huile','Pas de « mayonnaise » sous le bouchon'],
+    ['niv_refroid','Liquide de refroidissement','Niveau, couleur, pas de traces d\'huile'],
+    ['niv_frein','Liquide de frein',''],
+    ['niv_da','Direction assistée, lave-glace',''],
+    ['mot_fuites','Pas de fuite sous le moteur et la boîte',''],
+    ['mot_froid','Démarrage à froid, ralenti stable','Toucher le capot en arrivant'],
+    ['mot_fumee','Fumée à l\'échappement','Bleue = huile, blanche épaisse = joint de culasse'],
+    ['mot_courroie','Courroie d\'accessoires, bruit de distribution',''],
+  ]},
+  {k:'interieur', l:'Intérieur', items:[
+    ['int_tissus','Sièges et tissus','Brûlures, déchirures, taches'],
+    ['int_plastiques','Plastiques','Rayures, clips cassés, grincements'],
+    ['int_usure','Usure volant, pommeau, pédales cohérente avec le km',''],
+    ['int_clim','Climatisation qui souffle froid',''],
+    ['int_elec','Vitres, rétros, fermeture centralisée, multimédia',''],
+    ['int_voyants','Aucun voyant allumé moteur tournant',''],
+    ['int_cles','Double des clés',''],
+    ['int_humidite','Pas d\'humidité ni d\'odeur','Moquette mouillée, buée, odeur de moisi'],
+  ]},
+  {k:'diag', l:'Diagnostic à la valise', items:[
+    ['diag_codes','Codes défaut moteur','Noter et effacer, puis relire après l\'essai'],
+    ['diag_abs','Calculateur ABS / ESP',''],
+    ['diag_airbag','Calculateur airbag',''],
+    ['diag_km','Km des calculateurs = km du compteur','Repère un compteur trafiqué'],
+    ['diag_vin','VIN lu par la valise = carte grise',''],
+    ['diag_fap','FAP / AdBlue (diesel)','Taux de colmatage, dernière régénération'],
+  ]},
+  {k:'essai', l:'Essai routier', items:[
+    ['es_roulement','Bruit de roulement','Grondement qui change en virage = roulement de roue'],
+    ['es_embrayage','Embrayage','Patinage en 4e/5e, point de patinage très haut'],
+    ['es_boite','Passage des vitesses / boîte automatique','À-coups, craquements'],
+    ['es_freinage','Freinage droit, sans vibration',''],
+    ['es_direction','Direction : ne tire pas, pas de jeu',''],
+    ['es_suspension','Suspensions','Claquements sur ralentisseurs'],
+    ['es_110','Test à plus de 110 km/h','Vibrations au volant, bruit d\'air, stabilité'],
+    ['es_temp','Température moteur stable après l\'essai',''],
+  ]},
+];
+const ALL_ITEMS = CHECKLIST.flatMap(s => s.items.map(i => i[0]));
+
+/* ---------- Utilitaires ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const N = v => { const x = parseFloat(v); return isFinite(x) ? x : 0; };
+const has = v => v !== null && v !== undefined && v !== '' && isFinite(parseFloat(v));
+const fmtEur = new Intl.NumberFormat('fr-FR', {style:'currency', currency:'EUR', maximumFractionDigits:0});
+const eur = n => has(n) ? fmtEur.format(n) : '—';
+const nb = n => has(n) ? new Intl.NumberFormat('fr-FR').format(n) : '—';
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const today = () => new Date().toISOString().slice(0, 10);
+const days = (a, b) => Math.round((new Date(b) - new Date(a)) / 864e5);
+const frDate = d => d ? new Date(d + 'T12:00:00').toLocaleDateString('fr-FR', {day:'2-digit', month:'short'}) : '—';
+const median = arr => { if (!arr.length) return null; const s = [...arr].sort((a, b) => a - b); const m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
+const carName = c => [c.marque, c.modele].filter(Boolean).join(' ') || 'Voiture sans nom';
+const telHref = t => { let s = String(t || '').replace(/[^\d+]/g, ''); if (s.startsWith('0')) s = '+33' + s.slice(1); return 'tel:' + s; };
+const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 2600); }
+function getPath(o, p) { return p.split('.').reduce((a, k) => a == null ? a : a[k], o); }
+function setPath(o, p, v) { const ks = p.split('.'); let cur = o; ks.slice(0, -1).forEach(k => { if (typeof cur[k] !== 'object' || cur[k] === null) cur[k] = {}; cur = cur[k]; }); cur[ks.at(-1)] = v; }
+function niceStep(range, n = 4) { const raw = range / n || 1; const p = Math.pow(10, Math.floor(Math.log10(raw))); const f = raw / p; return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * p; }
+const kfmt = v => Math.abs(v) >= 1000 ? (v / 1000).toLocaleString('fr-FR', {maximumFractionDigits:1}) + ' k' : String(Math.round(v));
+
+/* ---------- État ---------- */
+const state = {
+  cars: [], cotes: [],
+  config: {regime:'marge', tauxMicro:12.3, recherches:[]},
+  view: lsGet('fa.view', 'recherche'),
+  drawer: null,
+  inspect: lsGet('fa.inspect', null),
+  marge: lsGet('fa.marge', null),
+  cote: null,
+  showAbandon: false,
+  crit: lsGet('fa.crit', {marque:'', modele:'', prixMin:'', prixMax:'', anneeMin:'', kmMax:'', carburant:'', boite:''}),
+  mode: 'local',
+};
+const car = id => state.cars.find(c => c.id === id);
+
+/* ---------- Stockage : base partagée (db) ou navigateur ---------- */
+let db = null;
+const overrides = new Map(), timers = new Map(), inflight = new Set();
+
+function persistLocal() { lsSet('fa.data', {cars: state.cars, cotes: state.cotes, config: state.config}); }
+function writeDoc(path, data, delay = 450) {
+  if (!db) { clearTimeout(persistLocal.t); persistLocal.t = setTimeout(persistLocal, 200); return; }
+  overrides.set(path, data);
+  clearTimeout(timers.get(path));
+  timers.set(path, setTimeout(() => flush(path), delay));
+}
+async function flush(path) {
+  if (inflight.has(path)) { timers.set(path, setTimeout(() => flush(path), 250)); return; }
+  if (!overrides.has(path)) return;
+  const data = overrides.get(path);
+  inflight.add(path);
+  try {
+    if (data === null) await db.doc(path).delete(); else await db.doc(path).set(data);
+    if (overrides.get(path) === data) overrides.delete(path);
+  } catch (e) {
+    if (e && e.code === 'unavailable') { setTimeout(() => flush(path), 800 + Math.random() * 800); }
+    else { overrides.delete(path); toast(e && e.code === 'quota_exceeded' ? 'Stockage plein : supprimez d\'anciennes fiches.' : 'Enregistrement impossible, réessayez.'); }
+  } finally { inflight.delete(path); }
+}
+function strip(o) { const d = JSON.parse(JSON.stringify(o)); delete d.id; return d; }
+const saveCar = c => writeDoc('voitures/' + c.id, strip(c));
+const saveCote = c => writeDoc('cotes/' + c.id, strip(c), 0);
+const saveConfig = () => writeDoc('config/app', JSON.parse(JSON.stringify(state.config)), 0);
+function removeCar(id) { state.cars = state.cars.filter(c => c.id !== id); writeDoc('voitures/' + id, null, 0); }
+function removeCote(id) { state.cotes = state.cotes.filter(c => c.id !== id); writeDoc('cotes/' + id, null, 0); }
+
+function mergeCol(col, docs) {
+  const map = new Map(docs.map(d => [d.id, {...structuredClone(d.data()), id: d.id}]));
+  for (const [path, data] of overrides) {
+    const [c, id] = path.split('/');
+    if (c !== col) continue;
+    if (data === null) map.delete(id); else map.set(id, {...structuredClone(data), id});
+  }
+  return [...map.values()];
+}
+
+async function connect() {
+  if (!window.claude || !window.claude.use) return;
+  let d = null;
+  try { d = await window.claude.use('db'); } catch { d = null; }
+  if (!d) return;
+  db = d; state.mode = 'db';
+  const onErr = () => { $('#sync').classList.remove('on'); $('#sync span').textContent = 'Synchro interrompue'; };
+  let first = {cars:false, cotes:false};
+  db.collection('voitures').onSnapshot(s => { state.cars = mergeCol('voitures', s.docs); first.cars = true; renderAll(); }, onErr);
+  db.collection('cotes').onSnapshot(s => { state.cotes = mergeCol('cotes', s.docs); first.cotes = true; renderAll(); }, onErr);
+  db.doc('config/app').onSnapshot(s => {
+    if (overrides.has('config/app')) return;
+    if (s.exists) state.config = {...state.config, ...structuredClone(s.data())};
+    renderAll();
+  }, onErr);
+  $('#sync').classList.add('on'); $('#sync span').textContent = 'Partagé en direct';
+}
+
+/* ---------- Calculs ---------- */
+function fraisTotal(c) { const f = c.frais || {}; return FRAIS.reduce((s, x) => s + N(f[x.k]), 0); }
+function taxes(A, V) {
+  if (state.config.regime === 'micro') return V * N(state.config.tauxMicro) / 100;
+  return Math.max(0, V - A) / 6; // TVA sur marge : 20 % de la marge TTC -> marge / 6
+}
+function calc(c, V) {
+  const A = N(c.prixAchat), F = fraisTotal(c); V = N(V);
+  const brute = V - A - F, tx = taxes(A, V), nette = brute - tx, cout = A + F;
+  return {A, F, V, cout, brute, tx, nette, pct: cout ? nette / cout * 100 : 0};
+}
+function coteFor(c) {
+  const key = carName(c).toLowerCase();
+  return state.cotes.find(k => key === (k.modele || '').toLowerCase())
+      || state.cotes.find(k => key.startsWith((k.modele || '').toLowerCase()) || (k.modele || '').toLowerCase().startsWith(key));
+}
+function coteStats(k) {
+  const p = (k?.obs || []).map(o => N(o.prix)).filter(Boolean);
+  return p.length ? {n: p.length, min: Math.min(...p), max: Math.max(...p), med: median(p)} : null;
+}
+function inspTally(c) {
+  const t = {ok:0, warn:0, ko:0, cost:0, docKo:0};
+  const ins = c.inspection || {};
+  for (const k of ALL_ITEMS) { const it = ins[k]; if (!it || !it.s) continue; t[it.s]++; if (it.s !== 'ok') t.cost += N(it.c); if (it.s === 'ko' && k.startsWith('doc_')) t.docKo++; }
+  t.done = t.ok + t.warn + t.ko; t.total = ALL_ITEMS.length;
+  return t;
+}
+function questionsFor(c) { return c.source === 'mobile.de' ? [...QUESTIONS, ...QUESTIONS_IMPORT] : QUESTIONS; }
+
+/* ---------- Liens de recherche ---------- */
+function lbcUrl(c) {
+  const p = new URLSearchParams({category:'2'});
+  if (c.modele) p.set('text', c.modele);
+  if (c.marque) p.set('u_car_brand', c.marque.normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase());
+  if (has(c.prixMin) || has(c.prixMax)) p.set('price', (has(c.prixMin) ? c.prixMin : 'min') + '-' + (has(c.prixMax) ? c.prixMax : 'max'));
+  if (has(c.kmMax)) p.set('mileage', 'min-' + c.kmMax);
+  if (has(c.anneeMin)) p.set('regdate', c.anneeMin + '-max');
+  if (LBC_FUEL[c.carburant]) p.set('fuel', LBC_FUEL[c.carburant]);
+  if (c.boite) p.set('gearbox', c.boite === 'Automatique' ? '2' : '1');
+  p.set('sort', 'time'); p.set('order', 'desc');
+  return 'https://www.leboncoin.fr/recherche?' + p.toString();
+}
+function mdeUrl(c) {
+  const p = new URLSearchParams({isSearchRequest:'true', s:'Car', vc:'Car', dam:'false', sb:'doc', od:'down'});
+  if (MDE_MAKE[c.marque]) p.set('ms', MDE_MAKE[c.marque] + ';;;');
+  if (has(c.prixMin) || has(c.prixMax)) p.set('p', (has(c.prixMin) ? c.prixMin : '') + ':' + (has(c.prixMax) ? c.prixMax : ''));
+  if (has(c.kmMax)) p.set('ml', ':' + c.kmMax);
+  if (has(c.anneeMin)) p.set('fr', c.anneeMin + ':');
+  if (MDE_FUEL[c.carburant]) p.set('ft', MDE_FUEL[c.carburant]);
+  if (c.boite) p.set('tr', c.boite === 'Automatique' ? 'AUTOMATIC_GEAR' : 'MANUAL_GEAR');
+  return 'https://suchen.mobile.de/fahrzeuge/search.html?' + p.toString();
+}
+function critLabel(c) {
+  const parts = [];
+  if (has(c.prixMin) || has(c.prixMax)) parts.push((has(c.prixMin) ? eur(c.prixMin) + ' – ' : '≤ ') + (has(c.prixMax) ? eur(c.prixMax) : '∞'));
+  if (has(c.anneeMin)) parts.push('dès ' + c.anneeMin);
+  if (has(c.kmMax)) parts.push('≤ ' + nb(c.kmMax) + ' km');
+  if (c.carburant) parts.push(c.carburant);
+  if (c.boite) parts.push(c.boite);
+  return parts.join(' · ') || 'Aucun filtre';
+}
+
+/* ---------- Petits composants ---------- */
+const plate = t => t ? `<span class="plate"><span class="eu">F</span><span class="txt">${esc(t)}</span></span>` : `<span class="plate none"><span class="eu">F</span><span class="txt">··-···-··</span></span>`;
+const srcChip = s => s === 'leboncoin' ? '<span class="chip lbc">leboncoin</span>' : s === 'mobile.de' ? '<span class="chip mde">mobile.de</span>' : s ? `<span class="chip">${esc(s)}</span>` : '';
+const opts = (list, v, empty) => (empty !== undefined ? `<option value="">${esc(empty)}</option>` : '') + list.map(o => { const [val, lab] = Array.isArray(o) ? o : [o, o]; return `<option value="${esc(val)}"${String(v ?? '') === String(val) ? ' selected' : ''}>${esc(lab)}</option>`; }).join('');
+function carField(c, f, label, type = 'text', extra = '') {
+  const v = getPath(c, f);
+  const id = 'c-' + c.id + '-' + f.replace(/\./g, '-');
+  return `<div class="field ${extra}"><label for="${id}">${label}</label><input id="${id}" type="${type}" data-car="${c.id}" data-f="${f}" value="${esc(v ?? '')}"${type === 'number' ? ' inputmode="numeric"' : ''}></div>`;
+}
+function carSelect(c, f, label, list, empty) {
+  const id = 'c-' + c.id + '-' + f;
+  return `<div class="field"><label for="${id}">${label}</label><select id="${id}" data-car="${c.id}" data-f="${f}">${opts(list, c[f], empty)}</select></div>`;
+}
+function exampleBanner() {
+  const n = state.cars.filter(c => c.exemple).length + state.cotes.filter(c => c.exemple).length;
+  if (!n) return '';
+  return `<div class="banner"><span><b>Données d'exemple</b> : les voitures et cotes marquées « exemple » montrent le fonctionnement. Effacez-les quand vous démarrez.</span><button class="btn sm" data-act="clear-examples">Effacer les exemples</button></div>`;
+}
+
+/* ---------- Vue 1 : Recherche ---------- */
+function viewRecherche() {
+  const c = state.crit;
+  const saved = state.config.recherches || [];
+  return `
+  <header class="page-head"><div>
+    <p class="eyebrow">Étape 1</p><h1>Recherche</h1>
+    <p class="lede">Réglez vos critères une fois : la page prépare la recherche filtrée sur leboncoin et mobile.de, triée par annonces les plus récentes.</p>
+  </div></header>
+  ${exampleBanner()}
+  <div class="grid-2">
+    <section class="panel">
+      <div class="panel-head"><h2>Nos critères</h2></div>
+      <div class="fields">
+        <div class="field"><label for="crit-marque">Marque</label><select id="crit-marque" data-crit="marque">${opts(MARQUES, c.marque, 'Toutes')}</select></div>
+        <div class="field"><label for="crit-modele">Modèle</label><input id="crit-modele" type="text" data-crit="modele" value="${esc(c.modele)}" placeholder="ex. 308"></div>
+        <div class="field"><label for="crit-prixMin">Prix min</label><div class="suffix"><input id="crit-prixMin" type="number" data-crit="prixMin" value="${esc(c.prixMin)}"><span>€</span></div></div>
+        <div class="field"><label for="crit-prixMax">Prix max</label><div class="suffix"><input id="crit-prixMax" type="number" data-crit="prixMax" value="${esc(c.prixMax)}"><span>€</span></div></div>
+        <div class="field"><label for="crit-anneeMin">Année min</label><input id="crit-anneeMin" type="number" data-crit="anneeMin" value="${esc(c.anneeMin)}" placeholder="2015"></div>
+        <div class="field"><label for="crit-kmMax">Km max</label><div class="suffix"><input id="crit-kmMax" type="number" data-crit="kmMax" value="${esc(c.kmMax)}"><span>km</span></div></div>
+        <div class="field"><label for="crit-carburant">Carburant</label><select id="crit-carburant" data-crit="carburant">${opts(CARBURANTS, c.carburant, 'Tous')}</select></div>
+        <div class="field"><label for="crit-boite">Boîte</label><select id="crit-boite" data-crit="boite">${opts(['Manuelle', 'Automatique'], c.boite, 'Toutes')}</select></div>
+      </div>
+      <div class="site-btns">
+        <a class="site lbc" id="go-lbc" href="${esc(lbcUrl(c))}" target="_blank" rel="noopener"><b>leboncoin ↗</b><span>Annonces France</span></a>
+        <a class="site mde" id="go-mde" href="${esc(mdeUrl(c))}" target="_blank" rel="noopener"><b>mobile.de ↗</b><span>Annonces Allemagne (import)</span></a>
+      </div>
+      <div class="row" style="justify-content:space-between">
+        <button class="btn" data-act="save-search">Enregistrer cette recherche</button>
+        <button class="btn ghost sm" data-act="reset-crit">Effacer les critères</button>
+      </div>
+      <div class="callout"><span>ℹ︎</span><span>leboncoin et mobile.de ne proposent pas d'accès public à leurs annonces : on ne peut pas les afficher directement ici. La page ouvre donc chaque site <b>déjà filtré</b> ; notez ensuite les annonces intéressantes à droite.${c.modele && c.marque && MDE_MAKE[c.marque] ? ' Sur mobile.de, affinez le modèle dans la page ouverte.' : ''}${c.marque && !MDE_MAKE[c.marque] ? ' Marque à choisir manuellement sur mobile.de.' : ''}</span></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><div><h2>Ajouter une annonce repérée</h2><p>Elle part directement dans la prospection.</p></div></div>
+      <form id="quick-add" class="fields">
+        <div class="field"><label for="qa-source">Site</label><select id="qa-source" name="source">${opts(['leboncoin', 'mobile.de', 'La Centrale', 'Autre'], 'leboncoin')}</select></div>
+        <div class="field"><label for="qa-marque">Marque</label><input id="qa-marque" name="marque" type="text" list="dl-marques" value="${esc(c.marque)}" required></div>
+        <div class="field"><label for="qa-modele">Modèle</label><input id="qa-modele" name="modele" type="text" value="${esc(c.modele)}" required></div>
+        <div class="field"><label for="qa-annee">Année</label><input id="qa-annee" name="annee" type="number"></div>
+        <div class="field"><label for="qa-km">Kilométrage</label><input id="qa-km" name="km" type="number"></div>
+        <div class="field"><label for="qa-prix">Prix affiché</label><div class="suffix"><input id="qa-prix" name="prixAnnonce" type="number"><span>€</span></div></div>
+        <div class="field"><label for="qa-tel">Téléphone vendeur</label><input id="qa-tel" name="tel" type="tel"></div>
+        <div class="field"><label for="qa-ville">Ville</label><input id="qa-ville" name="ville" type="text"></div>
+        <div class="field wide"><label for="qa-lien">Lien de l'annonce</label><input id="qa-lien" name="lien" type="url" placeholder="https://"></div>
+        <label class="check wide"><input id="qa-cote" name="cote" type="checkbox" checked> Ajouter aussi ce prix à la cote du modèle</label>
+        <div class="wide"><button class="btn primary" type="submit">Ajouter à la prospection</button></div>
+      </form>
+      <datalist id="dl-marques">${MARQUES.map(m => `<option value="${esc(m)}">`).join('')}</datalist>
+    </section>
+  </div>
+
+  <section class="panel">
+    <div class="panel-head"><div><h2>Recherches enregistrées</h2><p>Partagées entre vous, à relancer chaque jour.</p></div></div>
+    ${saved.length ? `<div class="saved">${saved.map(s => `
+      <div class="saved-item">
+        <div><div class="t">${esc([s.marque, s.modele].filter(Boolean).join(' ') || 'Toutes marques')}</div><div class="d">${esc(critLabel(s))}</div></div>
+        <div class="row">
+          <a class="btn sm" href="${esc(lbcUrl(s))}" target="_blank" rel="noopener">leboncoin ↗</a>
+          <a class="btn sm" href="${esc(mdeUrl(s))}" target="_blank" rel="noopener">mobile.de ↗</a>
+          <button class="btn ghost sm" data-act="load-search" data-id="${s.id}">Modifier</button>
+          <button class="btn ghost sm danger" data-act="del-search" data-id="${s.id}" aria-label="Supprimer la recherche">Supprimer</button>
+        </div>
+      </div>`).join('')}</div>` : `<p class="note">Aucune recherche enregistrée. Réglez vos critères puis « Enregistrer cette recherche ».</p>`}
+  </section>`;
+}
+
+/* ---------- Vue 2 : Prospection ---------- */
+function carCard(c) {
+  const k = coteStats(coteFor(c));
+  const price = c.statut === 'vendue' ? c.prixVente : ['achetee', 'vente'].includes(c.statut) ? c.prixAchat : c.prixAnnonce;
+  const priceLab = c.statut === 'vendue' ? 'vendue' : ['achetee', 'vente'].includes(c.statut) ? 'achat' : 'annonce';
+  let delta = '';
+  if (k && has(c.prixAnnonce) && ['repere', 'appeler', 'rdv'].includes(c.statut)) {
+    const d = N(c.prixAnnonce) - k.med;
+    delta = `<span class="delta ${d <= 0 ? 'good' : 'bad'}">${d <= 0 ? '▼' : '▲'} ${eur(Math.abs(d))} vs cote</span>`;
+  }
+  let foot = '';
+  if (['repere', 'appeler'].includes(c.statut)) {
+    const qs = questionsFor(c), n = qs.filter(q => c.questions?.[q[0]]).length;
+    foot = `<span>${c.tel ? '☎ ' + esc(c.tel) : 'Pas de numéro'}</span><span>${n}/${qs.length} questions</span>`;
+  } else if (['rdv', 'achetee'].includes(c.statut)) {
+    const t = inspTally(c);
+    foot = `<span>Inspection ${t.done}/${t.total}</span><span class="bar"><i style="width:${t.done / t.total * 100}%"></i></span>${t.ko ? `<span class="chip ko">${t.ko} KO</span>` : ''}`;
+  } else if (c.statut === 'vente') {
+    const r = calc(c, c.prixReventeCible);
+    foot = `<span>Affichée ${eur(c.prixReventeCible)}</span><span class="${r.nette >= 0 ? 'pos' : 'neg'}">marge ${eur(r.nette)}</span>`;
+  } else if (c.statut === 'vendue') {
+    const r = calc(c, c.prixVente);
+    foot = `<span>${frDate(c.dateVente)}${has(c.dateAchat) && c.dateVente ? ' · ' + days(c.dateAchat, c.dateVente) + ' j' : ''}</span><span class="${r.nette >= 0 ? 'pos' : 'neg'}">marge ${eur(r.nette)}</span>`;
+  }
+  return `<button class="card" data-open="${c.id}">
+    <div class="top"><span class="row" style="gap:4px">${srcChip(c.source)}${c.exemple ? '<span class="chip ex">exemple</span>' : ''}</span>${c.immat ? plate(c.immat) : ''}</div>
+    <div><div class="name">${esc(carName(c))}</div>${c.version ? `<div class="ver">${esc(c.version)}</div>` : ''}</div>
+    <div class="meta tnum">${[c.annee, has(c.km) ? nb(c.km) + ' km' : '', c.ville].filter(Boolean).map(esc).join(' · ')}</div>
+    <div class="row" style="justify-content:space-between"><span class="price tnum">${eur(price)} <small class="note" style="font-family:var(--body)">${priceLab}</small></span>${delta}</div>
+    ${foot ? `<div class="foot">${foot}</div>` : ''}
+  </button>`;
+}
+function viewProspection() {
+  const ab = state.cars.filter(c => c.statut === 'abandon');
+  const cols = STAGES.map(s => {
+    const list = state.cars.filter(c => c.statut === s.k).sort((a, b) => (b.dateVente || b.dateAchat || b.createdAt || '').localeCompare(a.dateVente || a.dateAchat || a.createdAt || ''));
+    return `<div class="col" data-stage="${s.k}"><div class="col-head"><b>${s.l}</b><span>${list.length}</span></div>
+      ${list.map(carCard).join('') || `<div class="empty-col">Aucune voiture</div>`}</div>`;
+  }).join('');
+  return `
+  <header class="page-head"><div>
+    <p class="eyebrow">Étape 2</p><h1>Prospection</h1>
+    <p class="lede">Chaque voiture avance de gauche à droite : repérée, appelée, essayée, achetée, en vente, vendue. Cliquez une fiche pour le numéro, les questions à poser et les notes.</p>
+  </div><button class="btn primary" data-act="new-car">+ Nouvelle voiture</button></header>
+  ${exampleBanner()}
+  <div class="toolbar"><span class="note">${state.cars.filter(c => ['repere', 'appeler', 'rdv'].includes(c.statut)).length} voitures en prospection · ${state.cars.filter(c => ['achetee', 'vente'].includes(c.statut)).length} en stock</span>
+    ${ab.length ? `<label class="check"><input id="show-abandon" type="checkbox" ${state.showAbandon ? 'checked' : ''}> Voir les abandonnées (${ab.length})</label>` : ''}</div>
+  <div class="board-scroll"><div class="board">${cols}</div></div>
+  ${state.showAbandon && ab.length ? `<section class="panel"><h2>Abandonnées</h2><div class="grid-2">${ab.map(carCard).join('')}</div></section>` : ''}`;
+}
+
+function renderDrawerHTML() {
+  const c = car(state.drawer);
+  if (!c) return '';
+  const qs = questionsFor(c);
+  return `<div class="drawer-bg" data-act="close-drawer"><aside class="drawer" role="dialog" aria-modal="true" aria-label="${esc(carName(c))}">
+    <div class="drawer-head">
+      <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+        <div class="row" style="gap:6px">${srcChip(c.source)}${c.exemple ? '<span class="chip ex">exemple</span>' : ''}${plate(c.immat)}</div>
+        <h2 style="font-size:30px">${esc(carName(c))}</h2>
+      </div>
+      <button class="btn ghost" data-act="close-drawer" aria-label="Fermer">✕</button>
+    </div>
+    <div class="drawer-body">
+      <div class="stages" role="group" aria-label="Étape">${[...STAGES, {k:'abandon', l:'Abandonnée'}].map(s => `<button data-act="stage" data-v="${s.k}" aria-pressed="${c.statut === s.k}">${s.l}</button>`).join('')}</div>
+
+      ${c.tel ? `<div class="call"><div><div class="lbl">Vendeur${c.vendeur ? ' · ' + esc(c.vendeur) : ''}</div><a class="num tnum" href="${esc(telHref(c.tel))}">${esc(c.tel)}</a></div><a class="btn primary" href="${esc(telHref(c.tel))}">Appeler</a></div>` : ''}
+
+      <section class="panel">
+        <div class="panel-head"><h3>Questions à poser au téléphone</h3><span class="note" id="q-count">${qs.filter(q => c.questions?.[q[0]]).length}/${qs.length}</span></div>
+        <div class="qlist">${qs.map(([k, l]) => `<label for="q-${c.id}-${k}"><input id="q-${c.id}-${k}" type="checkbox" data-car="${c.id}" data-f="questions.${k}" ${c.questions?.[k] ? 'checked' : ''}><span>${esc(l)}</span></label>`).join('')}</div>
+      </section>
+
+      <section class="panel">
+        <h3>Notes</h3>
+        <textarea id="c-${c.id}-notes" data-car="${c.id}" data-f="notes" placeholder="Réponses du vendeur, RDV, prix négocié…" aria-label="Notes">${esc(c.notes)}</textarea>
+      </section>
+
+      <section class="panel">
+        <h3>Fiche du véhicule</h3>
+        <div class="fields">
+          ${carField(c, 'marque', '<span class="cg">D.1</span>Marque')}
+          ${carField(c, 'modele', '<span class="cg">D.3</span>Modèle')}
+          ${carField(c, 'version', 'Version / motorisation', 'text', 'wide')}
+          ${carField(c, 'annee', '<span class="cg">B</span>Année', 'number')}
+          ${carField(c, 'km', 'Kilométrage', 'number')}
+          ${carSelect(c, 'carburant', 'Carburant', CARBURANTS, '—')}
+          ${carSelect(c, 'boite', 'Boîte', ['Manuelle', 'Automatique'], '—')}
+          ${carField(c, 'immat', '<span class="cg">A</span>Immatriculation')}
+          ${carField(c, 'prixAnnonce', 'Prix affiché (€)', 'number')}
+          ${carSelect(c, 'source', 'Site', ['leboncoin', 'mobile.de', 'La Centrale', 'Autre'])}
+          ${carField(c, 'ville', 'Ville')}
+          ${carField(c, 'vendeur', 'Vendeur')}
+          ${carField(c, 'tel', 'Téléphone', 'tel')}
+          ${carField(c, 'lien', 'Lien de l\'annonce', 'url', 'wide')}
+        </div>
+        ${c.lien ? `<a class="btn sm" href="${esc(c.lien)}" target="_blank" rel="noopener" style="align-self:flex-start">Ouvrir l'annonce ↗</a>` : ''}
+      </section>
+
+      <div class="row">
+        <button class="btn" data-act="goto-inspect" data-id="${c.id}">Faire l'inspection →</button>
+        <button class="btn" data-act="goto-marge" data-id="${c.id}">Calculer la marge →</button>
+        <span style="flex:1"></span>
+        <button class="btn ghost danger" data-act="del-car" data-id="${c.id}">Supprimer</button>
+      </div>
+    </div>
+  </aside></div>`;
+}
+
+/* ---------- Vue 3 : Inspection ---------- */
+function carPicker(id, current, filter) {
+  const list = state.cars.filter(filter);
+  const groups = STAGES.concat({k:'abandon', l:'Abandonnée'}).map(s => {
+    const g = list.filter(c => c.statut === s.k);
+    return g.length ? `<optgroup label="${s.l}">${g.map(c => `<option value="${c.id}"${c.id === current ? ' selected' : ''}>${esc(carName(c))}${c.annee ? ' · ' + c.annee : ''}${c.immat ? ' · ' + esc(c.immat) : ''}</option>`).join('')}</optgroup>` : '';
+  }).join('');
+  return `<select id="${id}">${groups}</select>`;
+}
+function verdictHTML(c) {
+  const t = inspTally(c);
+  let cls = 'idle', txt = `Inspection en cours : ${t.total - t.done} points à vérifier.`;
+  if (t.docKo) { cls = 'ko'; txt = 'Stop : papiers non conformes. On n\'achète pas.'; }
+  else if (t.ko >= 3) { cls = 'ko'; txt = `${t.ko} points KO : trop de risques, sauf très grosse remise.`; }
+  else if (t.ko || t.warn) { cls = 'warn'; txt = `Négociable : ${eur(t.cost)} de frais repérés à déduire du prix.`; }
+  else if (t.done === t.total) { cls = 'ok'; txt = 'Feu vert : aucun défaut relevé.'; }
+  return `<div class="verdict ${cls}"><span>${txt}</span>${t.cost ? `<button class="btn sm" data-act="report-cost" data-id="${c.id}">Reporter ${eur(t.cost)} dans les frais</button>` : ''}</div>`;
+}
+function inspSummary(c) {
+  const t = inspTally(c);
+  return `<div class="tally">
+      <div class="ok"><b class="tnum">${t.ok}</b><span>OK</span></div>
+      <div class="warn"><b class="tnum">${t.warn}</b><span>À surveiller</span></div>
+      <div class="ko"><b class="tnum">${t.ko}</b><span>KO</span></div>
+      <div><b class="tnum">${t.total - t.done}</b><span>Restants</span></div>
+    </div>`;
+}
+function viewInspection() {
+  const pool = c => ['rdv', 'achetee', 'appeler', 'repere', 'vente'].includes(c.statut) || c.id === state.inspect;
+  let c = car(state.inspect);
+  if (!c || !pool(c)) c = state.cars.find(x => x.statut === 'rdv') || state.cars.find(pool);
+  const head = `<header class="page-head"><div>
+    <p class="eyebrow">Étape 3</p><h1>Inspection à l'achat</h1>
+    <p class="lede">Le guide à suivre sur place, dans l'ordre : papiers d'abord, puis carrosserie, mécanique, valise et essai. Chaque défaut peut porter un coût estimé qui sert à négocier.</p>
+  </div></header>`;
+  if (!c) return head + `<div class="empty">Ajoutez une voiture dans la prospection pour lancer une inspection.</div>`;
+  state.inspect = c.id;
+  const ins = c.inspection || {};
+  return head + `
+  <section class="panel">
+    <div class="insp-top">
+      <div class="field"><label for="insp-car">Voiture inspectée</label>${carPicker('insp-car', c.id, pool)}</div>
+      <div id="insp-tally">${inspSummary(c)}</div>
+    </div>
+    <div id="insp-verdict">${verdictHTML(c)}</div>
+  </section>
+  ${CHECKLIST.map(sec => {
+    const done = sec.items.filter(i => ins[i[0]]?.s).length;
+    const ko = sec.items.filter(i => ins[i[0]]?.s === 'ko').length;
+    return `<details class="sec" open data-sec="${sec.k}">
+      <summary><h2>${sec.l}</h2><span class="prog">${ko ? `<span class="chip ko">${ko} KO</span>` : ''}<span class="tnum">${done}/${sec.items.length}</span><span class="bar"><i style="width:${done / sec.items.length * 100}%"></i></span></span></summary>
+      ${sec.items.map(([k, l, h]) => {
+        const it = ins[k] || {};
+        return `<div class="item" data-s="${it.s || ''}">
+          <div><div class="lab">${esc(l)}</div>${h ? `<div class="hint">${esc(h)}</div>` : ''}</div>
+          <div class="seg" role="group" aria-label="${esc(l)}">
+            ${[['ok', 'OK'], ['warn', 'À voir'], ['ko', 'KO']].map(([v, lab]) => `<button data-act="insp" data-k="${k}" data-v="${v}" aria-pressed="${it.s === v}">${lab}</button>`).join('')}
+          </div>
+          ${it.s && it.s !== 'ok' || it.n ? `<div class="extra">
+            <input id="n-${c.id}-${k}" type="text" data-car="${c.id}" data-f="inspection.${k}.n" value="${esc(it.n)}" placeholder="Remarque" aria-label="Remarque">
+            ${it.s && it.s !== 'ok' ? `<div class="suffix"><input id="cost-${c.id}-${k}" type="number" data-car="${c.id}" data-f="inspection.${k}.c" value="${esc(it.c ?? '')}" placeholder="Coût" aria-label="Coût estimé"><span>€</span></div>` : '<span></span>'}
+          </div>` : ''}
+        </div>`;
+      }).join('')}
+    </details>`;
+  }).join('')}`;
+}
+
+/* ---------- Vue 4 : Marges & cote ---------- */
+function maxBuy(V, F, M) {
+  if (state.config.regime === 'micro') return V * (1 - N(state.config.tauxMicro) / 100) - F - M;
+  return V - 6 * (M + F) / 5;
+}
+function margeOut(c) {
+  const target = calc(c, c.prixReventeCible);
+  const sold = has(c.prixVente) ? calc(c, c.prixVente) : null;
+  const r = sold || target;
+  const k = coteStats(coteFor(c));
+  const taxLab = state.config.regime === 'micro' ? `Cotisations micro (${N(state.config.tauxMicro)} % du prix)` : 'TVA sur marge (marge ÷ 6)';
+  return `<div class="ledger">
+      <div class="l"><span>${sold ? 'Prix de vente réel' : 'Prix de revente visé'}</span><b>${eur(r.V)}</b></div>
+      <div class="l"><span>Prix d'achat</span><b>− ${eur(r.A)}</b></div>
+      <div class="l"><span>Frais</span><b>− ${eur(r.F)}</b></div>
+      ${FRAIS.filter(f => N(c.frais?.[f.k])).map(f => `<div class="l sub"><span>${f.l}</span><span>${eur(c.frais[f.k])}</span></div>`).join('')}
+      <div class="l"><span>Marge brute</span><b>${eur(r.brute)}</b></div>
+      <div class="l"><span>${taxLab}</span><b>− ${eur(r.tx)}</b></div>
+      <div class="l total"><span>Marge nette${sold ? '' : ' prévue'}</span><b class="${r.nette >= 0 ? 'pos' : 'neg'}">${eur(r.nette)}</b></div>
+      <div class="l sub"><span>Rendement sur le coût de revient (${eur(r.cout)})</span><span>${r.pct.toLocaleString('fr-FR', {maximumFractionDigits:1})} %</span></div>
+    </div>
+    ${sold && has(c.prixReventeCible) ? `<p class="note">Prévu : ${eur(target.nette)} de marge nette · écart ${eur(sold.nette - target.nette)}</p>` : ''}
+    ${k ? `<p class="note">Cote ${esc(coteFor(c).modele)} : médiane ${eur(k.med)} (${k.n} annonces, ${eur(k.min)} – ${eur(k.max)}).${has(c.prixReventeCible) ? ` Votre prix visé est ${N(c.prixReventeCible) > k.med ? 'au-dessus' : 'en dessous'} de la médiane.` : ''}</p>` : '<p class="note">Pas encore de cote pour ce modèle : ajoutez des annonces plus bas.</p>'}`;
+}
+function scatter(k) {
+  const pts = (k.obs || []).filter(o => has(o.prix) && has(o.km));
+  if (pts.length < 2) return '<p class="note">Ajoutez au moins deux annonces avec kilométrage pour voir le nuage de prix.</p>';
+  const W = 640, H = 260, L = 56, R = 16, T = 14, B = 36;
+  const xs = pts.map(o => N(o.km)), ys = pts.map(o => N(o.prix));
+  const xStep = niceStep(Math.max(...xs) - Math.min(...xs) || 10000), yStep = niceStep(Math.max(...ys) - Math.min(...ys) || 1000);
+  const x0 = Math.floor(Math.min(...xs) / xStep) * xStep, x1 = Math.ceil(Math.max(...xs) / xStep) * xStep || x0 + xStep;
+  const y0 = Math.floor(Math.min(...ys) / yStep) * yStep, y1 = Math.ceil(Math.max(...ys) / yStep) * yStep || y0 + yStep;
+  const X = v => L + (v - x0) / ((x1 - x0) || 1) * (W - L - R), Y = v => H - B - (v - y0) / ((y1 - y0) || 1) * (H - T - B);
+  const med = median(ys);
+  let g = '';
+  for (let v = y0; v <= y1 + 1e-6; v += yStep) g += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line-2)"/><text x="${L - 8}" y="${Y(v) + 4}" text-anchor="end" font-size="13" fill="var(--ink-3)">${kfmt(v)} €</text>`;
+  for (let v = x0; v <= x1 + 1e-6; v += xStep) g += `<text x="${X(v)}" y="${H - B + 18}" text-anchor="middle" font-size="13" fill="var(--ink-3)">${kfmt(v)} km</text>`;
+  g += `<line x1="${L}" x2="${W - R}" y1="${Y(med)}" y2="${Y(med)}" stroke="var(--accent)" stroke-dasharray="5 4" stroke-width="1.5"/><text x="${W - R}" y="${Y(med) - 6}" text-anchor="end" font-size="13" font-weight="600" fill="var(--accent)">médiane ${eur(med)}</text>`;
+  g += pts.map(o => `<circle cx="${X(N(o.km))}" cy="${Y(N(o.prix))}" r="6" fill="var(--accent)" fill-opacity=".85" stroke="var(--surface)" stroke-width="2"><title>${eur(o.prix)} · ${nb(o.km)} km · ${o.annee || ''}</title></circle>`).join('');
+  return `<div class="tbl-wrap"><svg viewBox="0 0 ${W} ${H}" width="100%" style="min-width:420px;display:block" role="img" aria-label="Prix selon kilométrage">${g}</svg></div>`;
+}
+function viewMarges() {
+  const pool = c => c.statut !== 'repere' || c.id === state.marge;
+  let c = car(state.marge);
+  if (!c) c = state.cars.find(x => x.statut === 'achetee') || state.cars.find(x => x.statut === 'vente') || state.cars.find(pool);
+  if (c) state.marge = c.id;
+  const pm = lsGet('fa.pm', {v: 9000, f: 600, m: 1200});
+  const cotes = [...state.cotes].sort((a, b) => (a.modele || '').localeCompare(b.modele || ''));
+  const k = cotes.find(x => x.id === state.cote) || cotes[0];
+  if (k) state.cote = k.id;
+  const ks = k && coteStats(k);
+  return `
+  <header class="page-head"><div>
+    <p class="eyebrow">Étape 4</p><h1>Marges & cote</h1>
+    <p class="lede">Avant d'acheter : le prix maximum à ne pas dépasser. Après : la marge réelle de chaque voiture. Et la cote du marché, alimentée par les annonces que vous relevez.</p>
+  </div>
+  <div class="field" style="min-width:220px"><label for="cfg-regime">Régime fiscal</label><select id="cfg-regime">${opts([['marge', 'Société, TVA sur marge'], ['micro', 'Micro-entreprise']], state.config.regime)}</select></div>
+  </header>
+
+  <div class="grid-2">
+    <section class="panel">
+      <div class="panel-head"><div><h2>Prix d'achat maximum</h2><p>À connaître avant d'appeler le vendeur.</p></div></div>
+      <div class="fields">
+        <div class="field"><label for="pm-v">Prix de revente visé</label><div class="suffix"><input id="pm-v" type="number" data-pm="v" value="${esc(pm.v)}"><span>€</span></div></div>
+        <div class="field"><label for="pm-f">Frais prévus</label><div class="suffix"><input id="pm-f" type="number" data-pm="f" value="${esc(pm.f)}"><span>€</span></div></div>
+        <div class="field"><label for="pm-m">Marge nette voulue</label><div class="suffix"><input id="pm-m" type="number" data-pm="m" value="${esc(pm.m)}"><span>€</span></div></div>
+        ${state.config.regime === 'micro' ? `<div class="field"><label for="cfg-taux">Taux cotisations</label><div class="suffix"><input id="cfg-taux" type="number" step="0.1" value="${esc(state.config.tauxMicro)}"><span>%</span></div></div>` : ''}
+      </div>
+      <div class="bigout" id="pm-out">${pmOut(pm)}</div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><div><h2>Repères</h2><p>Frais typiques à ne pas oublier.</p></div></div>
+      <div class="ledger">
+        <div class="l"><span>Carte grise (selon puissance et région)</span><b>200 – 550 €</b></div>
+        <div class="l"><span>Import Allemagne : transport ou plaques + trajet</span><b>500 – 900 €</b></div>
+        <div class="l"><span>Contrôle technique / contre-visite</span><b>70 – 90 €</b></div>
+        <div class="l"><span>Préparation esthétique</span><b>80 – 200 €</b></div>
+        <div class="l"><span>Paire de pneus milieu de gamme</span><b>150 – 250 €</b></div>
+      </div>
+      <p class="note">${state.config.regime === 'micro' ? 'Micro-entreprise : cotisations calculées sur le prix de vente, pas de TVA facturée.' : 'Régime TVA sur marge (VO achetés à des particuliers) : 20 % de TVA sur la marge TTC, soit marge ÷ 6.'} Ordres de grandeur à ajuster.</p>
+    </section>
+  </div>
+
+  <section class="panel">
+    <div class="panel-head"><div><h2>Marge par voiture</h2><p>Les frais et prix saisis ici alimentent le bilan.</p></div>
+      ${c ? `<div class="field" style="min-width:260px"><label for="marge-car">Voiture</label>${carPicker('marge-car', c.id, pool)}</div>` : ''}</div>
+    ${c ? `<div class="calc">
+      <div class="fields">
+        ${carField(c, 'prixAchat', 'Prix d\'achat (€)', 'number')}
+        ${carField(c, 'dateAchat', 'Date d\'achat', 'date')}
+        ${FRAIS.map(f => carField(c, 'frais.' + f.k, f.l + ' (€)', 'number')).join('')}
+        ${carField(c, 'prixReventeCible', 'Prix de revente visé (€)', 'number')}
+        ${carField(c, 'prixVente', 'Prix de vente réel (€)', 'number')}
+        ${carField(c, 'dateVente', 'Date de vente', 'date')}
+        <p class="note wide">Saisir le prix et la date de vente passe la voiture en « Vendue ».</p>
+      </div>
+      <div id="marge-out" style="display:flex;flex-direction:column;gap:10px">${margeOut(c)}</div>
+    </div>` : '<div class="empty">Aucune voiture à calculer pour l\'instant.</div>'}
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><div><h2>Suivi du marché</h2><p>Relevez les prix des annonces comparables : la médiane devient votre cote de revente.</p></div></div>
+    <div class="cotes">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="mlist">${cotes.map(x => { const s = coteStats(x); return `<button data-act="cote" data-id="${x.id}" aria-pressed="${k && x.id === k.id}"><span class="m">${esc(x.modele)}</span><span class="p tnum">${s ? eur(s.med) : '—'}</span><span class="n">${s ? s.n : 0} annonces${x.exemple ? ' · exemple' : ''}</span></button>`; }).join('') || '<p class="note">Aucun modèle suivi.</p>'}</div>
+        <form id="obs-add" class="fields" style="grid-template-columns:1fr 1fr">
+          <div class="field wide"><label for="obs-modele">Modèle (marque + modèle)</label><input id="obs-modele" name="modele" type="text" list="dl-cotes" value="${esc(k?.modele || '')}" required></div>
+          <div class="field"><label for="obs-prix">Prix</label><input id="obs-prix" name="prix" type="number" required></div>
+          <div class="field"><label for="obs-km">Km</label><input id="obs-km" name="km" type="number"></div>
+          <div class="field"><label for="obs-annee">Année</label><input id="obs-annee" name="annee" type="number"></div>
+          <div class="field"><label for="obs-source">Source</label><select id="obs-source" name="source">${opts(['leboncoin', 'mobile.de', 'La Centrale', 'Autre'], 'leboncoin')}</select></div>
+          <div class="wide"><button class="btn primary" type="submit">Ajouter le prix relevé</button></div>
+        </form>
+        <datalist id="dl-cotes">${cotes.map(x => `<option value="${esc(x.modele)}">`).join('')}</datalist>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+        ${k ? `
+          <div class="panel-head"><h2>${esc(k.modele)}</h2><button class="btn ghost sm danger" data-act="del-cote" data-id="${k.id}">Supprimer ce modèle</button></div>
+          ${ks ? `<div class="stats"><div><span>Mini</span><b class="tnum">${eur(ks.min)}</b></div><div><span>Médiane</span><b class="tnum" style="color:var(--accent)">${eur(ks.med)}</b></div><div><span>Maxi</span><b class="tnum">${eur(ks.max)}</b></div><div><span>Annonces</span><b class="tnum">${ks.n}</b></div></div>` : ''}
+          ${scatter(k)}
+          <div class="tbl-wrap"><table><thead><tr><th>Relevé</th><th class="r">Prix</th><th class="r">Année</th><th class="r">Km</th><th>Source</th><th></th></tr></thead><tbody>
+            ${[...(k.obs || [])].map((o, i) => [o, i]).sort((a, b) => (b[0].date || '').localeCompare(a[0].date || '')).map(([o, i]) => `<tr><td>${frDate(o.date)}</td><td class="r">${eur(o.prix)}</td><td class="r">${esc(o.annee || '—')}</td><td class="r">${nb(o.km)}</td><td>${esc(o.source || '')}</td><td class="r"><button class="btn ghost sm" data-act="del-obs" data-id="${k.id}" data-i="${i}" aria-label="Supprimer ce relevé">✕</button></td></tr>`).join('')}
+          </tbody></table></div>` : '<div class="empty">Ajoutez un premier prix relevé pour créer la cote d\'un modèle.</div>'}
+      </div>
+    </div>
+  </section>`;
+}
+function pmOut(pm) {
+  const v = maxBuy(N(pm.v), N(pm.f), N(pm.m));
+  return `<span>Achetez au maximum</span><b class="tnum">${eur(Math.floor(v / 50) * 50)}</b><small>pour ${eur(pm.m)} de marge nette en revendant ${eur(pm.v)}, avec ${eur(pm.f)} de frais.</small>`;
+}
+
+/* ---------- Vue 5 : Bilan ---------- */
+function viewBilan() {
+  const sold = state.cars.filter(c => c.statut === 'vendue' && has(c.prixVente));
+  const stock = state.cars.filter(c => ['achetee', 'vente'].includes(c.statut));
+  const rows = sold.map(c => ({c, r: calc(c, c.prixVente), d: c.dateAchat && c.dateVente ? days(c.dateAchat, c.dateVente) : null}));
+  const ca = rows.reduce((s, x) => s + x.r.V, 0), marge = rows.reduce((s, x) => s + x.r.nette, 0);
+  const dl = rows.filter(x => x.d !== null).map(x => x.d);
+  const delai = dl.length ? dl.reduce((a, b) => a + b, 0) / dl.length : null;
+  const stockVal = stock.reduce((s, c) => s + N(c.prixAchat) + fraisTotal(c), 0);
+
+  // Mois : 6 derniers
+  const now = new Date(); const months = [];
+  for (let i = 5; i >= 0; i--) { const d = new Date(now.getFullYear(), now.getMonth() - i, 1); months.push({key: d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'), lab: d.toLocaleDateString('fr-FR', {month:'short'}).replace('.', ''), ca: 0, m: 0, n: 0}); }
+  rows.forEach(x => { const mo = months.find(m => m.key === (x.c.dateVente || '').slice(0, 7)); if (mo) { mo.ca += x.r.V; mo.m += x.r.nette; mo.n++; } });
+  const W = 640, H = 250, L = 52, R = 12, T = 22, B = 34;
+  const step = niceStep(Math.max(...months.map(m => m.ca), 1000));
+  const top = Math.max(step, Math.ceil(Math.max(...months.map(m => m.ca)) / step) * step);
+  const Y = v => H - B - v / top * (H - T - B);
+  const bw = (W - L - R) / months.length;
+  let svg = '';
+  for (let v = 0; v <= top + 1e-6; v += step) svg += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line-2)"/><text x="${L - 8}" y="${Y(v) + 4}" text-anchor="end" font-size="13" fill="var(--ink-3)">${kfmt(v)} €</text>`;
+  months.forEach((m, i) => {
+    const x = L + i * bw + bw * .22, w = bw * .56;
+    if (m.ca) {
+      svg += `<rect x="${x}" y="${Y(m.ca)}" width="${w}" height="${Y(0) - Y(m.ca)}" rx="3" fill="var(--accent)" fill-opacity=".28"><title>${m.lab} : ${eur(m.ca)} de CA, ${m.n} vente(s)</title></rect>`;
+      if (m.m > 0) svg += `<rect x="${x}" y="${Y(m.m)}" width="${w}" height="${Y(0) - Y(m.m)}" rx="3" fill="var(--accent)"><title>${m.lab} : ${eur(m.m)} de marge nette</title></rect>`;
+      svg += `<text x="${x + w / 2}" y="${Y(m.ca) - 6}" text-anchor="middle" font-size="13" font-weight="600" fill="var(--ink-2)">${kfmt(m.ca)}</text>`;
+    }
+    svg += `<text x="${x + w / 2}" y="${H - B + 18}" text-anchor="middle" font-size="14" fill="${m.key === today().slice(0, 7) ? 'var(--ink)' : 'var(--ink-3)'}" font-weight="${m.key === today().slice(0, 7) ? 700 : 400}">${m.lab}</text>`;
+  });
+  svg += `<line x1="${L}" x2="${W - R}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--ink-3)"/>`;
+
+  // Modèles
+  const byModel = {};
+  rows.forEach(x => { const key = carName(x.c); const g = byModel[key] ||= {name: key, n: 0, m: 0, ca: 0, d: []}; g.n++; g.m += x.r.nette; g.ca += x.r.V; if (x.d !== null) g.d.push(x.d); });
+  const models = Object.values(byModel).sort((a, b) => b.m - a.m);
+  const mMax = Math.max(...models.map(g => g.m), 1);
+
+  return `
+  <header class="page-head"><div>
+    <p class="eyebrow">Étape 5</p><h1>Bilan</h1>
+    <p class="lede">Chiffre d'affaires et marge des voitures vendues, et les modèles qui rapportent le plus pour orienter les prochains achats.</p>
+  </div></header>
+  ${exampleBanner()}
+  <div class="kpis">
+    <div class="kpi lead"><span>Marge nette</span><b class="tnum">${eur(marge)}</b><small>${sold.length} voiture${sold.length > 1 ? 's' : ''} vendue${sold.length > 1 ? 's' : ''}</small></div>
+    <div class="kpi"><span>Chiffre d'affaires</span><b class="tnum">${eur(ca)}</b><small>taux de marge ${ca ? (marge / ca * 100).toLocaleString('fr-FR', {maximumFractionDigits:1}) : 0} %</small></div>
+    <div class="kpi"><span>Marge / voiture</span><b class="tnum">${sold.length ? eur(marge / sold.length) : '—'}</b><small>moyenne nette</small></div>
+    <div class="kpi"><span>Délai de vente</span><b class="tnum">${delai !== null ? Math.round(delai) + ' j' : '—'}</b><small>de l'achat à la vente</small></div>
+    <div class="kpi"><span>Stock immobilisé</span><b class="tnum">${eur(stockVal)}</b><small>${stock.length} voiture${stock.length > 1 ? 's' : ''} achat + frais</small></div>
+  </div>
+
+  <div class="grid-2">
+    <section class="panel">
+      <div class="panel-head"><h2>CA par mois</h2><div class="legend"><span><i style="background:var(--accent);opacity:.28"></i>Chiffre d'affaires</span><span><i style="background:var(--accent)"></i>dont marge nette</span></div></div>
+      <div class="tbl-wrap"><svg viewBox="0 0 ${W} ${H}" width="100%" style="min-width:380px;display:block" role="img" aria-label="Chiffre d'affaires et marge par mois">${svg}</svg></div>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><div><h2>Modèles les plus rentables</h2><p>Marge nette cumulée · ventes · délai moyen</p></div></div>
+      ${models.length ? `<div class="hbars">${models.map(g => `<div class="hbar"><span class="name" title="${esc(g.name)}">${esc(g.name)}</span><span class="track"><i style="width:${Math.max(2, g.m / mMax * 100)}%"></i></span><span class="val">${eur(g.m)}</span></div>`).join('')}</div>
+      <div class="tbl-wrap"><table><thead><tr><th>Modèle</th><th class="r">Vendus</th><th class="r">Marge moy.</th><th class="r">Délai moy.</th></tr></thead><tbody>
+        ${models.map(g => `<tr><td>${esc(g.name)}</td><td class="r">${g.n}</td><td class="r">${eur(g.m / g.n)}</td><td class="r">${g.d.length ? Math.round(g.d.reduce((a, b) => a + b, 0) / g.d.length) + ' j' : '—'}</td></tr>`).join('')}
+      </tbody></table></div>` : '<div class="empty">Les modèles apparaîtront après la première vente.</div>'}
+    </section>
+  </div>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Ventes</h2></div>
+    ${rows.length ? `<div class="tbl-wrap"><table><thead><tr><th>Vendue le</th><th>Voiture</th><th class="r">Achat</th><th class="r">Frais</th><th class="r">Vente</th><th class="r">Marge nette</th><th class="r">Délai</th></tr></thead><tbody>
+      ${rows.sort((a, b) => (b.c.dateVente || '').localeCompare(a.c.dateVente || '')).map(x => `<tr><td>${frDate(x.c.dateVente)}</td><td><button class="btn ghost sm" data-open="${x.c.id}" style="padding-inline:0">${esc(carName(x.c))}</button> <span class="note">${esc(x.c.annee || '')}</span></td><td class="r">${eur(x.r.A)}</td><td class="r">${eur(x.r.F)}</td><td class="r">${eur(x.r.V)}</td><td class="r ${x.r.nette >= 0 ? 'pos' : 'neg'}"><b>${eur(x.r.nette)}</b></td><td class="r">${x.d !== null ? x.d + ' j' : '—'}</td></tr>`).join('')}
+    </tbody></table></div>` : '<div class="empty">Aucune vente enregistrée.</div>'}
+  </section>`;
+}
+
+/* ---------- Rendu ---------- */
+const RENDER = {recherche: viewRecherche, prospection: viewProspection, inspection: viewInspection, marges: viewMarges, bilan: viewBilan};
+let pendingMain = false, pendingDrawer = false;
+const editing = sel => { const a = document.activeElement; return a && a.closest(sel) && a.matches('input:not([type=checkbox]),textarea,select'); };
+function renderNav() {
+  const counts = {prospection: state.cars.filter(c => ['repere', 'appeler', 'rdv'].includes(c.statut)).length, inspection: state.cars.filter(c => c.statut === 'rdv').length, bilan: state.cars.filter(c => c.statut === 'vendue').length};
+  const sub = {prospection: n => n + ' en cours', inspection: n => n + ' RDV prévu' + (n > 1 ? 's' : ''), bilan: n => n + ' vendue' + (n > 1 ? 's' : '')};
+  $('#nav').innerHTML = VIEWS.map(v => `<button data-view="${v.k}" aria-current="${state.view === v.k ? 'page' : 'false'}"><span class="step">${v.step}</span><span>${v.l}</span>${sub[v.k] ? `<span class="count">${sub[v.k](counts[v.k])}</span>` : ''}</button>`).join('');
+}
+function renderMain(force) {
+  if (!force && editing('#main')) { pendingMain = true; return; }
+  pendingMain = false;
+  $('#main').innerHTML = RENDER[state.view]();
+}
+function renderDrawer(force) {
+  if (!force && editing('#drawer')) { pendingDrawer = true; return; }
+  pendingDrawer = false;
+  const scroller = $('#drawer .drawer'); const st = scroller ? scroller.scrollTop : 0;
+  if (state.drawer && !car(state.drawer)) state.drawer = null;
+  $('#drawer').innerHTML = renderDrawerHTML();
+  if (st && $('#drawer .drawer')) $('#drawer .drawer').scrollTop = st;
+}
+function renderAll(force) { renderNav(); renderMain(force); renderDrawer(force); }
+document.addEventListener('focusout', () => setTimeout(() => {
+  if (pendingMain && !editing('#main')) renderMain();
+  if (pendingDrawer && !editing('#drawer')) renderDrawer();
+}, 0));
+let mainTimer;
+const soonMain = () => { clearTimeout(mainTimer); mainTimer = setTimeout(() => { renderNav(); renderMain(); }, 350); };
+
+/* ---------- Actions ---------- */
+function go(view) { state.view = view; lsSet('fa.view', view); renderNav(); renderMain(true); window.scrollTo(0, 0); }
+function newCar(data) {
+  const c = {id: uid(), marque:'', modele:'', version:'', annee:null, km:null, carburant:'', boite:'', immat:'', source:'leboncoin', lien:'', prixAnnonce:null, ville:'', vendeur:'', tel:'', statut:'repere', notes:'', questions:{}, inspection:{}, prixAchat:null, frais:{}, prixReventeCible:null, prixVente:null, dateAchat:'', dateVente:'', createdAt: today(), ...data};
+  state.cars.push(c); saveCar(c); return c;
+}
+function addObs(modele, o) {
+  let k = state.cotes.find(x => (x.modele || '').toLowerCase() === modele.toLowerCase());
+  if (!k) { k = {id: uid(), modele, obs: []}; state.cotes.push(k); }
+  k.obs = [...(k.obs || []), {...o, date: today()}];
+  saveCote(k); return k;
+}
+
+document.addEventListener('click', e => {
+  const nav = e.target.closest('[data-view]');
+  if (nav) return go(nav.dataset.view);
+  const open = e.target.closest('[data-open]');
+  if (open) { state.drawer = open.dataset.open; renderDrawer(true); $('#drawer .drawer [data-act="close-drawer"]')?.focus(); return; }
+  const a = e.target.closest('[data-act]');
+  if (!a) return;
+  if (a.classList.contains('drawer-bg') && e.target !== a) return;
+  const act = a.dataset.act, id = a.dataset.id;
+  switch (act) {
+    case 'close-drawer': state.drawer = null; renderDrawer(true); break;
+    case 'new-car': { const c = newCar({}); state.drawer = c.id; renderAll(true); $('#c-' + c.id + '-marque')?.focus(); break; }
+    case 'stage': {
+      const c = car(state.drawer); if (!c) break;
+      c.statut = a.dataset.v;
+      if (c.statut === 'achetee' && !c.dateAchat) c.dateAchat = today();
+      if (c.statut === 'achetee' && !has(c.prixAchat) && has(c.prixAnnonce)) c.prixAchat = c.prixAnnonce;
+      if (c.statut === 'vendue' && !c.dateVente) c.dateVente = today();
+      saveCar(c); renderAll(true); toast('Étape : ' + STAGE_LABEL[c.statut]); break;
+    }
+    case 'del-car': { const c = car(id); if (c && confirm('Supprimer « ' + carName(c) + ' » ?')) { removeCar(id); state.drawer = null; renderAll(true); toast('Voiture supprimée'); } break; }
+    case 'goto-inspect': state.inspect = id; lsSet('fa.inspect', id); state.drawer = null; renderDrawer(true); go('inspection'); break;
+    case 'goto-marge': state.marge = id; lsSet('fa.marge', id); state.drawer = null; renderDrawer(true); go('marges'); break;
+    case 'insp': {
+      const c = car(state.inspect); if (!c) break;
+      c.inspection ||= {}; const it = c.inspection[a.dataset.k] ||= {};
+      it.s = it.s === a.dataset.v ? '' : a.dataset.v;
+      saveCar(c); renderNav(); renderMain(true); break;
+    }
+    case 'report-cost': { const c = car(id); if (!c) break; c.frais ||= {}; c.frais.reparation = inspTally(c).cost; saveCar(c); renderMain(true); toast('Frais de remise en état : ' + eur(c.frais.reparation)); break; }
+    case 'save-search': {
+      const s = {id: uid(), ...state.crit};
+      state.config.recherches = [s, ...(state.config.recherches || []).filter(x => critLabel(x) + x.marque + x.modele !== critLabel(s) + s.marque + s.modele)];
+      saveConfig(); renderMain(true); toast('Recherche enregistrée'); break;
+    }
+    case 'load-search': { const s = state.config.recherches.find(x => x.id === id); if (s) { const {id: _, ...crit} = s; state.crit = {...state.crit, ...crit}; lsSet('fa.crit', state.crit); renderMain(true); window.scrollTo({top: 0, behavior: 'smooth'}); } break; }
+    case 'del-search': state.config.recherches = state.config.recherches.filter(x => x.id !== id); saveConfig(); renderMain(true); break;
+    case 'reset-crit': state.crit = {marque:'', modele:'', prixMin:'', prixMax:'', anneeMin:'', kmMax:'', carburant:'', boite:''}; lsSet('fa.crit', state.crit); renderMain(true); break;
+    case 'cote': state.cote = id; renderMain(true); break;
+    case 'del-cote': { const k = state.cotes.find(x => x.id === id); if (k && confirm('Supprimer la cote « ' + k.modele + ' » et ses ' + (k.obs || []).length + ' relevés ?')) { removeCote(id); state.cote = null; renderMain(true); } break; }
+    case 'del-obs': { const k = state.cotes.find(x => x.id === id); if (!k) break; k.obs = k.obs.filter((_, i) => i !== +a.dataset.i); saveCote(k); renderMain(true); break; }
+    case 'clear-examples': {
+      if (!confirm('Effacer toutes les données d\'exemple ? Vos propres fiches sont conservées.')) break;
+      state.cars.filter(c => c.exemple).forEach(c => removeCar(c.id));
+      state.cotes.filter(c => c.exemple).forEach(c => removeCote(c.id));
+      state.config.recherches = (state.config.recherches || []).filter(r => !String(r.id).startsWith('rx'));
+      saveConfig(); state.drawer = null; renderAll(true); toast('Exemples effacés'); break;
+    }
+  }
+});
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && state.drawer) { state.drawer = null; renderDrawer(true); } });
+
+function coerce(el) {
+  if (el.type === 'checkbox') return el.checked;
+  if (el.type === 'number') return el.value === '' ? null : N(el.value);
+  return el.value;
+}
+function onCarInput(el) {
+  const c = car(el.dataset.car); if (!c) return;
+  const f = el.dataset.f;
+  setPath(c, f, coerce(el));
+  if ((f === 'prixVente' || f === 'dateVente') && has(c.prixVente) && c.dateVente && c.statut !== 'vendue') c.statut = 'vendue';
+  saveCar(c);
+  if (state.view === 'marges' && el.closest('#main')) { const o = $('#marge-out'); if (o) o.innerHTML = margeOut(c); }
+  if (state.view === 'inspection' && el.closest('#main')) { $('#insp-tally').innerHTML = inspSummary(c); $('#insp-verdict').innerHTML = verdictHTML(c); }
+  if (el.closest('#drawer')) {
+    if (f.startsWith('questions.')) { const qs = questionsFor(c); $('#q-count').textContent = qs.filter(q => c.questions?.[q[0]]).length + '/' + qs.length; }
+    soonMain();
+  }
+}
+document.addEventListener('input', e => {
+  const el = e.target;
+  if (el.dataset.car && el.type !== 'checkbox' && el.tagName !== 'SELECT') return onCarInput(el);
+  if (el.dataset.crit !== undefined && el.tagName === 'INPUT') {
+    state.crit[el.dataset.crit] = el.value; lsSet('fa.crit', state.crit);
+    $('#go-lbc').href = lbcUrl(state.crit); $('#go-mde').href = mdeUrl(state.crit);
+    return;
+  }
+  if (el.dataset.pm) { const pm = lsGet('fa.pm', {v: 9000, f: 600, m: 1200}); pm[el.dataset.pm] = el.value; lsSet('fa.pm', pm); $('#pm-out').innerHTML = pmOut(pm); return; }
+  if (el.id === 'cfg-taux') { state.config.tauxMicro = N(el.value); writeDoc('config/app', JSON.parse(JSON.stringify(state.config)), 600); $('#pm-out').innerHTML = pmOut(lsGet('fa.pm', {v: 9000, f: 600, m: 1200})); const c = car(state.marge); if (c && $('#marge-out')) $('#marge-out').innerHTML = margeOut(c); }
+});
+document.addEventListener('change', e => {
+  const el = e.target;
+  if (el.dataset.car && (el.type === 'checkbox' || el.tagName === 'SELECT')) {
+    onCarInput(el);
+    if (el.tagName === 'SELECT' && el.closest('#drawer')) { renderNav(); renderMain(true); }
+    return;
+  }
+  if (el.dataset.car && el.type === 'date') { renderNav(); return; }
+  if (el.dataset.crit !== undefined && el.tagName === 'SELECT') { state.crit[el.dataset.crit] = el.value; lsSet('fa.crit', state.crit); renderMain(true); return; }
+  if (el.id === 'insp-car') { state.inspect = el.value; lsSet('fa.inspect', el.value); renderMain(true); return; }
+  if (el.id === 'marge-car') { state.marge = el.value; lsSet('fa.marge', el.value); renderMain(true); return; }
+  if (el.id === 'cfg-regime') { state.config.regime = el.value; saveConfig(); renderMain(true); return; }
+  if (el.id === 'show-abandon') { state.showAbandon = el.checked; renderMain(true); return; }
+});
+document.addEventListener('submit', e => {
+  const f = e.target; e.preventDefault();
+  const d = Object.fromEntries(new FormData(f));
+  if (f.id === 'quick-add') {
+    const c = newCar({
+      source: d.source, marque: d.marque.trim(), modele: d.modele.trim(), annee: has(d.annee) ? N(d.annee) : null, km: has(d.km) ? N(d.km) : null,
+      prixAnnonce: has(d.prixAnnonce) ? N(d.prixAnnonce) : null, tel: d.tel, ville: d.ville, lien: d.lien, statut: d.tel ? 'appeler' : 'repere',
+    });
+    if (d.cote && has(d.prixAnnonce)) addObs(carName(c), {prix: N(d.prixAnnonce), km: has(d.km) ? N(d.km) : null, annee: has(d.annee) ? N(d.annee) : null, source: d.source});
+    renderAll(true); toast(carName(c) + ' ajoutée en « ' + STAGE_LABEL[c.statut] + ' »');
+  }
+  if (f.id === 'obs-add') {
+    const k = addObs(d.modele.trim(), {prix: N(d.prix), km: has(d.km) ? N(d.km) : null, annee: has(d.annee) ? N(d.annee) : null, source: d.source});
+    state.cote = k.id; renderMain(true); $('#obs-prix')?.focus(); toast('Prix ajouté à la cote ' + k.modele);
+  }
+});
+
+/* ---------- Démarrage ---------- */
+(function boot() {
+  if (window.claude && window.claude.use) {
+    renderAll(true);
+    connect().then(() => {
+      if (!db) { const saved = lsGet('fa.data', null) || DEMO; Object.assign(state, {cars: saved.cars, cotes: saved.cotes, config: {...state.config, ...saved.config}}); renderAll(true); }
+    });
+  } else {
+    const saved = lsGet('fa.data', null) || structuredClone(DEMO);
+    Object.assign(state, {cars: saved.cars, cotes: saved.cotes, config: {...state.config, ...saved.config}});
+    renderAll(true);
+  }
+})();
+</script>
